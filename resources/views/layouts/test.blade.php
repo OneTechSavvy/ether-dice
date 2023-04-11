@@ -249,11 +249,14 @@ p {
 <body>
 
 
-<div id="app">
+  <div id="app">
     <nav class="navbar navbar-expand-sm navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
-                <img src="{{ asset('icons/cahootlogo.png') }}" alt="Cahoot Logo" class="logo">
+                <img src="{{ asset('icons/ethdicelogo.png') }}" alt="Cahoot Logo" class="logo">
+            </a>
+            <a class="navbar-brand" href="{{ url('/') }}">
+                <img src="{{ asset('icons/winlogo.png') }}" alt="Cahoot Logo" class="logo2">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                 <span class="navbar-toggler-icon"></span>
@@ -261,22 +264,9 @@ p {
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a href="{{ url('/') }}">
-                            <img src="{{ asset('icons/jackpottest.png') }}" alt="Jackpot Icon" class="nav-icon-jackpot">
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url('coinflip') }}">
-                            <img src="{{ asset('icons/coinfliptest.png') }}" alt="Coinflip Icon" class="nav-icon-coinflip">
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url('dice') }}">
-                            <img src="{{ asset('icons/dicetest.png') }}" alt="Dice Icon" class="nav-icon-dice">
-                        </a>
-                    </li>
+                 
                 </ul>              
+           
 
                 <ul class="navbar-nav ml-auto">
                               <li class="nav-item">
@@ -330,9 +320,9 @@ p {
         
 <footer>
   <div class="footer-left">
-    <img src="{{ asset('icons/cahootlogobottom.png') }}" alt="Logo">
-    <p>Copyright© 2022 - 2023 cahootbet.com. All rights reserved.
-      <br>Contact: support@cahootbet.com
+    <img src="{{ asset('icons/ethdicelogobottom.png') }}" alt="Logo">
+    <p>Copyright© 2022 - 2023 ethdice.com - All rights reserved.
+      <br>Contact: support@ethdice.com
     </p>
   </div>
   <div class="footer-center">

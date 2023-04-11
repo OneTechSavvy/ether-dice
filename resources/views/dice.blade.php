@@ -50,6 +50,10 @@
                 <!-- Left container content -->
                 <form class="form-container" method="POST" action="{{ route('dice.play') }}">
                   @csrf
+                  <div class="win-chance-input">
+                      <label for="winChanceDisplay">Win Chance:</label>
+                <input type="text" id="winChanceDisplay" readonly style="color: black;">
+                        </div>
                   <div class="bet-container">
                     <label for="betAmount">Bet Amount:</label>
                     <input type="hidden" name="winChance" id="winChanceInput" value="{{ $winChance }}">
@@ -172,7 +176,7 @@ betAmountInput.addEventListener('input', function() {
 slider.addEventListener('input', function() {
     updateWinAmount();
 });
-                function updateWinAmount() {
+function updateWinAmount() {
     // Get the current value of the slider and bet amount input field
     const value = slider.value;
     const betAmount = parseFloat(betAmountInput.value);
@@ -188,6 +192,10 @@ slider.addEventListener('input', function() {
     payout.textContent = payoutValue;
     winAmount.textContent = amount;
     winChanceInput.value = value;
+
+    // Update the win chance input field
+    const winChanceDisplay = document.getElementById('winChanceDisplay');
+    winChanceDisplay.value = chance;
 }
 
 // Call updateWinAmount() to initialize win amount based on the initial bet amount
@@ -252,9 +260,6 @@ function connectSSE() {
 window.addEventListener('DOMContentLoaded', function() {
     setTimeout(connectSSE, 1000);
 });
-
-
-
         </script>
     @endsection
 
