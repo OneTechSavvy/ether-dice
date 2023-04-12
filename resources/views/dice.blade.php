@@ -8,18 +8,20 @@
       <link rel="stylesheet" href="{{ asset('css/dice.css') }}">
         <style>
 .styled-table {
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     margin: 25px 0;
     font-size: 0.9em;
-    height: 300px;
     font-family: sans-serif;
-    min-width: 250px;
+    min-width: 300px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .styled-table thead tr {
-    background-color: #009879;
-    color: #6e6e6e;
+    background-color: #aca327;
+    color: #ffffff;
     text-align: left;
 }
 
@@ -29,15 +31,19 @@
 }
 
 .styled-table tbody tr {
-    border-bottom: 1px solid #423939;
+    border-bottom: 1px solid #dddddd;
 }
 
 .styled-table tbody tr:nth-of-type(even) {
-    background-color: #4b1818;
+    background-color: #504f4f;
 }
 
 .styled-table tbody tr:last-of-type {
     border-bottom: 2px solid #009879;
+}
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
 }
         </style>
     </head>
@@ -122,7 +128,7 @@
                 <tbody>
                     @foreach($lastGames as $game)
                         <tr>
-                            <td>{{ $game->user_id }}</td>
+                            <td>{{ $game->user->name }}</td>
                             <td>{{ $game->bet_amount }}</td>
                             <td>{{ $game->win_chance }}</td>
                             <td>{{ $game->payout }}</td>
@@ -224,20 +230,20 @@ function connectSSE() {
         const source = new EventSource('{{ route('dice.games.sse') }}');
 
         source.onmessage = function(event) {
-            const game = JSON.parse(event.data);
+    const game = JSON.parse(event.data);
 
-            const tableBody = document.getElementById('new-games-table').getElementsByTagName('tbody')[0];
-            const rowCount = tableBody.rows.length;
+    const tableBody = document.getElementById('new-games-table').getElementsByTagName('tbody')[0];
+    const rowCount = tableBody.rows.length;
 
             // Remove the oldest game if there are already 10 games displayed
             if (rowCount >= 10) {
-                tableBody.deleteRow(0);
-            }
+        tableBody.deleteRow(rowCount - 1);
+    }
 
             // Add the new game
-            const row = tableBody.insertRow();
+            const row = tableBody.insertRow(0);
 
-            row.insertCell().innerHTML = game.user_id;
+            row.insertCell().innerHTML = game.user_name;
             row.insertCell().innerHTML = game.bet_amount;
             row.insertCell().innerHTML = game.win_chance;
             row.insertCell().innerHTML = game.payout;

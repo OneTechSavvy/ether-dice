@@ -134,8 +134,7 @@ public function play(Request $request)
     
         $user->update(['coins' => $balance]); // Update user's coins in database
 
-    $jackpot = House::where('name', 'DiceJackpot')->first();
-    $jackpotCoins = $jackpot ? $jackpot->coins : 0;
+        $jackpotCoins = $houses['DiceJackpot']->coins ?? 0;
 
     $game = new DiceGame([
         'user_id' => $user->id,
