@@ -45,6 +45,51 @@
     font-weight: bold;
     color: #009879;
 }
+.popup-button {
+  display: inline-block;
+    margin-right: 10px;
+    padding: 5px 10px;
+    background-color: #494949;
+    border: none;
+    cursor: pointer;
+
+}
+.buttons-container {
+    margin-bottom: 10px;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #585656;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
         </style>
     </head>
     <body>
@@ -58,13 +103,14 @@
                   @csrf
                   <div class="win-chance-input">
                       <label for="winChanceDisplay">Win Chance:</label>
-                <input type="text" id="winChanceDisplay" readonly style="color: black;">
+                      <input type="text" id="winChanceDisplay" readonly style="color: black;" disabled>
+
                         </div>
                   <div class="bet-container">
                     <label for="betAmount">Bet Amount:</label>
                     <input type="hidden" name="winChance" id="winChanceInput" value="{{ $winChance }}">
                     <div class="bet-input-modifiers">
-                      <input type="number" id="betAmount" name="betAmount" min="1" max="{{ $balance }}" value="{{ $betAmount }}" style="color: black;">
+                      <input type="number" id="betAmount" name="betAmount" min="1" max="{{ $balance }}" value="{{ $betAmount }}" style="color: black;"required>
                       <div class="bet-modifiers">
                         <button id="btn2x" class="modifier-button">2x</button>
                         <button id="btnMin" class="modifier-button">Min</button>
@@ -86,6 +132,38 @@
               </div>
               <div class="right-container">
                 <!-- Right container content -->
+                <div class="buttons-container">
+                  <button id="button1" class="popup-button">Jackpot</button>
+                  <button id="button2" class="popup-button">Fairness</button>
+              </div>
+          
+                 <!-- Add the first modal (initially hidden) -->
+                <div id="modal1" class="modal">
+                  <div class="modal-content">
+                      <span class="close close1">&times;</span>
+                      <p>A Jackpot is a huge prize separate from your standard Dice wins, and comes as a percentage of Jackpot Pool.
+
+                        Jackpot Pool carries a 10% gross profit of the Dice game. This grows each time the Dice is played without a Jackpot won.
+                        
+                        How To Enter?
+                        The bet needs to be a winning one.
+                        How To Hit The Jackpot?
+                        You receive a random 5 digit number every time you make a valid bet.
+                        When this number is 42424, you've hit the Jackpot!
+                        The prize is sent to your account balance once you win. You do not need to report it anywhere.
+                        How Big Is The Prize?
+                        Jackpot Prize = 80% of the Jackpot Pool 
+                       </p>
+                  </div>
+              </div>
+               <!-- Add the second modal (initially hidden) -->
+              <div id="modal2" class="modal">
+                <div class="modal-content">
+                    <span class="close close2">&times;</span>
+                    <p>Information about the game (Modal 2)...</p>
+                </div>
+            </div>
+            
                 <form method="GET" action="{{ route('dice.play') }}">
                   @csrf
                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -164,7 +242,47 @@
             </div>
           </div>
       </body>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var button1 = document.getElementById('button1');
+            var button2 = document.getElementById('button2');
+            var modal1 = document.getElementById('modal1');
+            var modal2 = document.getElementById('modal2');
+            var closeButton1 = document.getElementsByClassName('close1')[0];
+            var closeButton2 = document.getElementsByClassName('close2')[0];
+        
+            function showModal1() {
+                modal1.style.display = 'block';
+            }
+        
+            function showModal2() {
+                modal2.style.display = 'block';
+            }
+        
+            function hideModal1() {
+                modal1.style.display = 'none';
+            }
+        
+            function hideModal2() {
+                modal2.style.display = 'none';
+            }
+        
+            button1.onclick = showModal1;
+            button2.onclick = showModal2;
+            closeButton1.onclick = hideModal1;
+            closeButton2.onclick = hideModal2;
+            window.onclick = function(event) {
+                if (event.target == modal1) {
+                    hideModal1();
+                } else if (event.target == modal2) {
+                    hideModal2();
+                }
+            };
+        });
+        </script>
+        
         <script>
+          
             // Get the range input field and the win chance, payout, and win amount elements
             const betAmountInput = document.getElementById('betAmount');
             const slider = document.getElementById('slider');
