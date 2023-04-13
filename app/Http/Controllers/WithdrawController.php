@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Withdrawal;
 use Illuminate\Support\Facades\DB;
+use GuzzleHttp\Client;
+
 
 
 
@@ -13,7 +15,15 @@ class WithdrawController extends Controller
 {
     public function create()
 {
-    return view('withdraw');
+    $client = new Client([
+        'base_uri' => 'https://ethgasstation.info',
+    ]);
+    $response = $client->request('GET', '/api/ethgasAPI.json');
+    $body = json_decode($response->getBody(), true);
+
+    $gasPrice = $body['safeLow'] / 10; // in Gwei
+
+    return view('withdraw', ['gasPrice' => $gasPrice]);
 }
     public function store(Request $request)
     {
@@ -88,9 +98,19 @@ public function withdrawETH(Request $request)
     }
 }
 
-public function showETHWithdrawForm()
+public function showGas()
 {
-    return view('withdraw.eth');
+    $client = new Client([
+        'base_uri' => 'https://ethgasstation.info',
+    ]);
+    $response = $client->request('GET', '/api/ethgasAPI.json');
+    $body = json_decode($response->getBody(), true);
+
+    $gasPrice = $body['safeLow'] / 10; // in Gwei
+
+    return view('withdraw', ['gasPrice' => $gasPrice]);
+}
 }
 
-}
+
+

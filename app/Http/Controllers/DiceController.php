@@ -111,6 +111,7 @@ public function play(Request $request)
         $balance -= $betAmount; // Remove bet amount from balance when user plays the game
     
         $house = House::where('name', 'DiceHouse')->first(); // Get the DiceHouse user from the House table
+        $ticket = null; // Set ticket to null by default
 
     
         if ($result == 'win') {
@@ -156,6 +157,7 @@ public function play(Request $request)
         'payout' => $payout,
         'win_amount' => $winAmount,
         'jackpotCoins' => $jackpotCoins,
+        'ticket' => $ticket,
         'created_at' => now(),
     ]);
     

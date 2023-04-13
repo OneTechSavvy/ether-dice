@@ -234,7 +234,7 @@
             <button class="back-button" onclick="hideETHWithdrawForm()">Back</button>
             <div class="form-window-content">
                 <h3>Withdraw Ethereum</h3>
-                <p>Please enter the Ethereum wa</p>
+                <p>Please enter the Ethereum wallet</p>
                 <form action="{{ route('withdraw.store') }}" method="POST">
                     @csrf
                     <div class="form-group">
@@ -244,6 +244,9 @@
                     <div class="form-group">
                         <label for="eth_address">Ethereum Address</label>
                         <input type="text" name="eth_address" id="eth_address" class="form-control" required>
+                        @if(isset($gasPrice))
+    <p>Gas price: {{ $gasPrice }} Gwei</p>
+@endif
                     </div>
                     <button type="submit" class="btn btn-primary">Request Withdrawal</button>
                 </form>

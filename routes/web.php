@@ -16,6 +16,8 @@ use App\Http\Controllers\WithdrawController;
 use App\Http\Controllers\MatchBettingController;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Http\Controllers\SSEController;
+use App\Http\Controllers\GasController;
+
 
 
 /*
@@ -68,6 +70,8 @@ Route::post('/withdraw', [WithdrawController::class, 'store'])->name('withdraw.s
 
 Route::get('/withdraw/eth', [WithdrawController::class, 'showETHWithdrawForm'])->name('withdraw.eth');
 
+Route::get('/gas', [WithdrawController::class, 'showGas'])->name('gas.show');
+
 
 
 Route::get('/admin', [WithdrawController::class, 'getAllWithdrawals'])->name('admin');
@@ -80,6 +84,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     
 Route::get('/dice-games-sse', [SSEController::class, 'diceGamesSSE'])->name('dice.games.sse');
+
+
 
 
 

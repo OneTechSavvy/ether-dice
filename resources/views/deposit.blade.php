@@ -263,35 +263,6 @@ function hideETHdepositForm() {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
 <script>
-  function generateNewAccount() {
-    // Load web3 library
-    const web3 = new Web3('https://dry-frequent-grass.ethereum-goerli.quiknode.pro/');
 
-    // Create a new Ethereum account
-    const newAccount = web3.eth.accounts.create();
-
-    // Log the address and private key of the new account to the console
-    console.log('New Ethereum account created:');
-    console.log(`Address: ${newAccount.address}`);
-    console.log(`Private key: ${newAccount.privateKey}`);
-
-    // Send the eth_address and eth_private_key values to the server
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', "{{ route('crypto-wallets.update') }}", true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-    xhr.onload = function() {
-      if (xhr.status === 200) {
-        console.log('Eth address and private key saved successfully');
-      } else {
-        console.log('Error saving eth address and private key');
-      }
-    };
-    xhr.send(JSON.stringify({eth_address: newAccount.address, eth_private_key: newAccount.privateKey}));
-  }
-
-  // Call the generateNewAccount function when the page is loaded
-  window.addEventListener('load', generateNewAccount);
 </script>
 @endsection
