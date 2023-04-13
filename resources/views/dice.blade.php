@@ -8,18 +8,20 @@
       <link rel="stylesheet" href="{{ asset('css/dice.css') }}">
         <style>
 .styled-table {
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     margin: 25px 0;
     font-size: 0.9em;
-    height: 300px;
     font-family: sans-serif;
-    min-width: 250px;
+    min-width: 300px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .styled-table thead tr {
-    background-color: #009879;
-    color: #6e6e6e;
+    background-color: #aca327;
+    color: #ffffff;
     text-align: left;
 }
 
@@ -29,15 +31,64 @@
 }
 
 .styled-table tbody tr {
-    border-bottom: 1px solid #423939;
+    border-bottom: 1px solid #dddddd;
 }
 
 .styled-table tbody tr:nth-of-type(even) {
-    background-color: #4b1818;
+    background-color: #504f4f;
 }
 
 .styled-table tbody tr:last-of-type {
     border-bottom: 2px solid #009879;
+}
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+.popup-button {
+  display: inline-block;
+    margin-right: 10px;
+    padding: 5px 10px;
+    background-color: #494949;
+    border: none;
+    cursor: pointer;
+
+}
+.buttons-container {
+    margin-bottom: 10px;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #585656;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
 }
         </style>
     </head>
@@ -50,11 +101,16 @@
                 <!-- Left container content -->
                 <form class="form-container" method="POST" action="{{ route('dice.play') }}">
                   @csrf
+                  <div class="win-chance-input">
+                      <label for="winChanceDisplay">Win Chance:</label>
+                      <input type="text" id="winChanceDisplay" readonly style="color: black;" disabled>
+
+                        </div>
                   <div class="bet-container">
                     <label for="betAmount">Bet Amount:</label>
                     <input type="hidden" name="winChance" id="winChanceInput" value="{{ $winChance }}">
                     <div class="bet-input-modifiers">
-                      <input type="number" id="betAmount" name="betAmount" min="1" max="{{ $balance }}" value="{{ $betAmount }}" style="color: black;">
+                      <input type="number" id="betAmount" name="betAmount" min="1" max="{{ $balance }}" value="{{ $betAmount }}" style="color: black;"required>
                       <div class="bet-modifiers">
                         <button id="btn2x" class="modifier-button">2x</button>
                         <button id="btnMin" class="modifier-button">Min</button>
@@ -76,6 +132,38 @@
               </div>
               <div class="right-container">
                 <!-- Right container content -->
+                <div class="buttons-container">
+                  <button id="button1" class="popup-button">Jackpot</button>
+                  <button id="button2" class="popup-button">Fairness</button>
+              </div>
+          
+                 <!-- Add the first modal (initially hidden) -->
+                <div id="modal1" class="modal">
+                  <div class="modal-content">
+                      <span class="close close1">&times;</span>
+                      <p>A Jackpot is a huge prize separate from your standard Dice wins, and comes as a percentage of Jackpot Pool.
+
+                        Jackpot Pool carries a 10% gross profit of the Dice game. This grows each time the Dice is played without a Jackpot won.
+                        
+                        How To Enter?
+                        The bet needs to be a winning one.
+                        How To Hit The Jackpot?
+                        You receive a random 5 digit number every time you make a valid bet.
+                        When this number is 42424, you've hit the Jackpot!
+                        The prize is sent to your account balance once you win. You do not need to report it anywhere.
+                        How Big Is The Prize?
+                        Jackpot Prize = 80% of the Jackpot Pool 
+                       </p>
+                  </div>
+              </div>
+               <!-- Add the second modal (initially hidden) -->
+              <div id="modal2" class="modal">
+                <div class="modal-content">
+                    <span class="close close2">&times;</span>
+                    <p>Information about the game (Modal 2)...</p>
+                </div>
+            </div>
+            
                 <form method="GET" action="{{ route('dice.play') }}">
                   @csrf
                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -118,7 +206,7 @@
                 <tbody>
                     @foreach($lastGames as $game)
                         <tr>
-                            <td>{{ $game->user_id }}</td>
+                            <td>{{ $game->user->name }}</td>
                             <td>{{ $game->bet_amount }}</td>
                             <td>{{ $game->win_chance }}</td>
                             <td>{{ $game->payout }}</td>
@@ -154,7 +242,47 @@
             </div>
           </div>
       </body>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var button1 = document.getElementById('button1');
+            var button2 = document.getElementById('button2');
+            var modal1 = document.getElementById('modal1');
+            var modal2 = document.getElementById('modal2');
+            var closeButton1 = document.getElementsByClassName('close1')[0];
+            var closeButton2 = document.getElementsByClassName('close2')[0];
+        
+            function showModal1() {
+                modal1.style.display = 'block';
+            }
+        
+            function showModal2() {
+                modal2.style.display = 'block';
+            }
+        
+            function hideModal1() {
+                modal1.style.display = 'none';
+            }
+        
+            function hideModal2() {
+                modal2.style.display = 'none';
+            }
+        
+            button1.onclick = showModal1;
+            button2.onclick = showModal2;
+            closeButton1.onclick = hideModal1;
+            closeButton2.onclick = hideModal2;
+            window.onclick = function(event) {
+                if (event.target == modal1) {
+                    hideModal1();
+                } else if (event.target == modal2) {
+                    hideModal2();
+                }
+            };
+        });
+        </script>
+        
         <script>
+          
             // Get the range input field and the win chance, payout, and win amount elements
             const betAmountInput = document.getElementById('betAmount');
             const slider = document.getElementById('slider');
@@ -172,7 +300,7 @@ betAmountInput.addEventListener('input', function() {
 slider.addEventListener('input', function() {
     updateWinAmount();
 });
-                function updateWinAmount() {
+function updateWinAmount() {
     // Get the current value of the slider and bet amount input field
     const value = slider.value;
     const betAmount = parseFloat(betAmountInput.value);
@@ -188,6 +316,10 @@ slider.addEventListener('input', function() {
     payout.textContent = payoutValue;
     winAmount.textContent = amount;
     winChanceInput.value = value;
+
+    // Update the win chance input field
+    const winChanceDisplay = document.getElementById('winChanceDisplay');
+    winChanceDisplay.value = chance;
 }
 
 // Call updateWinAmount() to initialize win amount based on the initial bet amount
@@ -216,20 +348,20 @@ function connectSSE() {
         const source = new EventSource('{{ route('dice.games.sse') }}');
 
         source.onmessage = function(event) {
-            const game = JSON.parse(event.data);
+    const game = JSON.parse(event.data);
 
-            const tableBody = document.getElementById('new-games-table').getElementsByTagName('tbody')[0];
-            const rowCount = tableBody.rows.length;
+    const tableBody = document.getElementById('new-games-table').getElementsByTagName('tbody')[0];
+    const rowCount = tableBody.rows.length;
 
             // Remove the oldest game if there are already 10 games displayed
             if (rowCount >= 10) {
-                tableBody.deleteRow(0);
-            }
+        tableBody.deleteRow(rowCount - 1);
+    }
 
             // Add the new game
-            const row = tableBody.insertRow();
+            const row = tableBody.insertRow(0);
 
-            row.insertCell().innerHTML = game.user_id;
+            row.insertCell().innerHTML = game.user_name;
             row.insertCell().innerHTML = game.bet_amount;
             row.insertCell().innerHTML = game.win_chance;
             row.insertCell().innerHTML = game.payout;
@@ -252,9 +384,6 @@ function connectSSE() {
 window.addEventListener('DOMContentLoaded', function() {
     setTimeout(connectSSE, 1000);
 });
-
-
-
         </script>
     @endsection
 

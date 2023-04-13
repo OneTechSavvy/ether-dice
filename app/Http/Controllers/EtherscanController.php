@@ -9,6 +9,7 @@ use App\Models\User; // replace with your User model namespace
 
 class EtherscanController extends Controller
 {
+    
     public function getSuccessfulTransactions(Request $request)
     {
         $ethApiKey = 'NMHIJP3N6ACFDC97VK9WWYQ9VWMTRX3WZA'; // replace with your Etherscan API key
@@ -88,4 +89,6 @@ class EtherscanController extends Controller
 
         return $body['ethereum']['usd'];
     }
+    
+
 }

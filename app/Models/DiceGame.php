@@ -20,6 +20,7 @@ class DiceGame extends Model
         'house_edge',
         'dice_jackpot',
         'created_at',
+        'ticket',
     ];
 
     public function user()

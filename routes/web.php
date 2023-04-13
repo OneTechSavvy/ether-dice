@@ -16,6 +16,8 @@ use App\Http\Controllers\WithdrawController;
 use App\Http\Controllers\MatchBettingController;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Http\Controllers\SSEController;
+use App\Http\Controllers\GasController;
+
 
 
 /*
@@ -30,7 +32,7 @@ use App\Http\Controllers\SSEController;
 */
 
 Route::get('/', function () {
-    return view('jackpot');
+    return view('dice');
 });
 Route::get('/deposit', function () {
     return view('deposit');
@@ -50,36 +52,25 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified'
 ])->group(function () {
-    Route::get('/jackpot', function () {
-        return view('jackpot');
-    })->name('jackpot');
+    Route::get('/dice', function () {
+        return view('dice');
+    })->name('dice');
 });
 
-Route::get('/', [JackpotController::class, 'jackpot'])->name('home');
-Route::get('/coins', [CoinsController::class, 'index'])->name('coins.index');
-Route::post('/coins/update', [CoinsController::class, 'update'])->name('coins.update');
-Route::post('/coins/add', [CoinsController::class, 'add'])->name('coins.add');
-Route::post('/coins/subtract', [CoinsController::class, 'subtract'])->name('coins.subtract');
+Route::get('/', [DiceController::class, 'index'])->name('home');
 Route::post('/crypto-wallets', 'App\Http\Controllers\CryptoWalletsController@update')->name('crypto-wallets.update');
 Route::get('/test-connection', [App\Http\Controllers\EthereumController::class, 'testConnection']);
 Route::get('/etherscan/successful-transactions', [EtherscanController::class, 'getSuccessfulTransactions']);
-Route::post('/join-game', [GameController::class, 'joinGame'])->name('join-game');
 Route::get('/dice', [DiceController::class, 'index'])->name('dice');
 Route::post('/dice/play', [DiceController::class, 'play'])->middleware('auth')->name('dice.play');
-Route::get('/jackpot', [JackpotController::class, 'jackpot'])->name('jackpot');
-Route::get('/generateSeed', [SeedController::class, 'generateSeed']);
-Route::post('/jackpot/PlayerPool', [JackpotController::class, 'PlayerPool'])->name('jackpot.PlayerPool');
-Route::post('/jackpot/jackpot-game', [JackpotController::class, 'jackpotGame'])->name('jackpot.jackpotGame');
 
-Route::get('/coinflip', [CoinflipController::class, 'index'])->name('coinflip.index');
-
-Route::get('/match-betting', [App\Http\Controllers\MatchBettingController::class, 'index']);
-Route::get('/match-betting', [MatchBettingController::class, 'showMatches']);
 
 Route::get('/withdraw', [WithdrawController::class, 'create'])->name('withdraw.create')->middleware('auth');
 Route::post('/withdraw', [WithdrawController::class, 'store'])->name('withdraw.store')->middleware('auth');
 
 Route::get('/withdraw/eth', [WithdrawController::class, 'showETHWithdrawForm'])->name('withdraw.eth');
+
+Route::get('/gas', [WithdrawController::class, 'showGas'])->name('gas.show');
 
 
 
@@ -92,15 +83,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
 });
 
     
-Route::middleware(['auth'])->group(function () {
-    Route::post('/coinflip/create_game', [CoinflipController::class, 'createGame'])->name('coinflip.create_game');
-    Route::post('/coinflip/join_game/{gameId}', [CoinflipController::class, 'joinGame'])->name('coinflip.join_game');
-
-
-
-});
-Route::get('/coinflip-sse', [SSEController::class, 'coinflipSSE'])->name('coinflip.sse');
 Route::get('/dice-games-sse', [SSEController::class, 'diceGamesSSE'])->name('dice.games.sse');
+
+
 
 
 
