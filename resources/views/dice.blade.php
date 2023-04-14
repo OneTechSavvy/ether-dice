@@ -136,7 +136,7 @@ bottom: 290px;
                     <label for="betAmount">Bet Amount:</label>
                     <input type="hidden" name="winChance" id="winChanceInput" value="{{ $winChance }}">
                     <div class="bet-input-modifiers">
-                      <input type="number" id="betAmount" name="betAmount" min="1" max="{{ $balance }}" value="{{ $betAmount }}" style="color: black;"required>
+                      <input type="number" id="betAmount" name="betAmount" min="1" max="{{ $balance }}" step="0.1" value="{{ $betAmount }}" style="color: black;"required>
                       <div class="bet-modifiers">
                         <button id="btn2x" class="modifier-button">2x</button>
                         <button id="btnMin" class="modifier-button">Min</button>
