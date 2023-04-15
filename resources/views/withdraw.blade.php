@@ -193,7 +193,7 @@
                 <div class="row row-cols-3 g-4">
                     <!-- Add more cryptocurrencies in the same format -->
                     <div class="d-flex justify-content-around">
-                        <div class="card" onclick="location.href='/withdraw/btc'">
+                        <div class="card" onclick="showBSCWithdrawForm()">
                             <img src="{{ asset('icons/BNB.png') }}" class="img" alt="BNB" width="100" height="100">
                             <div class="card-body">
                                 <div class="textbox">
@@ -260,6 +260,70 @@
             </div>
         </div>
     </div>
+        <div id="eth-withdraw-form" class="hidden">
+        <!-- ETH Withdrawal Form Here -->
+        <div class="form-window-container">
+            <button class="back-button" onclick="hideETHWithdrawForm()">Back</button>
+            <div class="form-window-content">
+                <h3>Withdraw Ethereum</h3>
+                <p>Please enter the Ethereum wallet</p>
+                <form action="{{ route('withdraw.store') }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <label for="coins">Coins to Withdraw</label>
+                        <input type="number" name="coins" id="coins" class="form-control" min="1" max="{{ auth()->user()->coins }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eth_address">Ethereum Address</label>
+                        <input type="text" name="eth_address" id="eth_address" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Gas Price Options:</label>
+                        <div>
+                            <input type="radio" id="gas_price_1" name="gas_price" value="{{ $gasPrice }}" checked>
+                            <label for="gas_price_1">{{ ($gasPrice) }}</label>
+                        </div>
+                    </div>
+                    <input type="hidden" name="gas_price" value="{{ $gasPrice }}">
+                    <button type="submit" class="btn btn-primary" id="withdrawalButton">
+                        Request Withdrawal ({{ ($gasPrice) }} coins)
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="BSC-withdraw-form" class="hidden">
+        <!-- ETH Withdrawal Form Here -->
+        <div class="form-window-container">
+            <button class="back-button" onclick="hideBSCWithdrawForm()">Back</button>
+            <div class="form-window-content">
+                <h3>Withdraw BNB</h3>
+                <p>Please enter the BNB wallet</p>
+                <form action="{{ route('withdraw.store') }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <label for="coins">Coins to Withdraw</label>
+                        <input type="number" name="coins" id="coins" class="form-control" min="1" max="{{ auth()->user()->coins }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eth_address">BNB Address</label>
+                        <input type="text" name="bnb_address" id="bnb_address" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Gas Price Options:</label>
+                        <div>
+                            <input type="radio" id="gas_price_1" name="gas_price" value="{{ $gasPrice }}" checked>
+                            <label for="gas_price_1">{{ ($gasPrice) }}</label>
+                        </div>
+                    </div>
+                    <input type="hidden" name="gas_price" value="{{ $gasPrice }}">
+                    <button type="submit" class="btn btn-primary" id="withdrawalButton">
+                        Request Withdrawal ({{ ($gasPrice) }} coins)
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -293,6 +357,22 @@ function showETHWithdrawForm() {
 function hideETHWithdrawForm() {
     // Hide the ETH withdrawal form
     document.querySelector('#eth-withdraw-form').classList.add('hidden');
+    // Remove the "hidden" class from the cryptocurrency card grid
+    document.querySelector('.row-cols-3').classList.remove('hidden');
+    // Display the main container
+    document.querySelector('.main-container').classList.remove('hidden');
+}
+function showBSCWithdrawForm() {
+    
+    document.querySelector('.main-container').classList.add('hidden');
+    // Remove the cryptocurrency card grid
+    document.querySelector('.row-cols-3').classList.add('hidden');
+    // Display the ETH withdrawal form
+    document.querySelector('#BSC-withdraw-form').classList.remove('hidden');
+}
+function hideBSCWithdrawForm() {
+    // Hide the ETH withdrawal form
+    document.querySelector('#BSC-withdraw-form').classList.add('hidden');
     // Remove the "hidden" class from the cryptocurrency card grid
     document.querySelector('.row-cols-3').classList.remove('hidden');
     // Display the main container
