@@ -7,151 +7,173 @@
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
       <link rel="stylesheet" href="{{ asset('css/dice.css') }}">
         <style>
-.styled-table {
-    border-collapse: separate;
-    border-spacing: 0;
-    margin: 25px 0;
-    font-size: 0.9em;
-    font-family: sans-serif;
-    min-width: 300px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    border-radius: 10px;
-    overflow: hidden;
-}
+            .styled-table {
+                position: relative;
+                top: 40px;
+                border-spacing: 0;
+                border-collapse: separate;
+                margin: 25px 0;
+                font-size: 0.9em;
+                font-family: sans-serif;
+                
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+                border-radius: 10px;
+                overflow: hidden;
+            }
 
-.styled-table thead tr {
-    background-color: #aca327;
-    color: #ffffff;
-    text-align: left;
-}
+            .styled-table thead tr {
+                background-color: grey;
+                color: #ffffff;
+                text-align: left;
+                border: 1px solid black;
+                border-radius: 20px;
+            }
 
-.styled-table th,
-.styled-table td {
-    padding: 12px 15px;
-}
+            .styled-table th,
+            .styled-table td {
+                padding: 7px 11px;
+            }
 
-.styled-table tbody tr {
-    border-bottom: 1px solid #dddddd;
-}
+            .styled-table tbody tr {
+              
+                border-bottom: 1px solid #dddddd;
+            }
 
-.styled-table tbody tr:nth-of-type(even) {
-    background-color: #504f4f;
-}
+            .styled-table tbody tr:nth-of-type(even) {
+                background-color: #504f4f;
+            }
 
-.styled-table tbody tr:last-of-type {
-    border-bottom: 2px solid #009879;
-}
-.styled-table tbody tr.active-row {
-    font-weight: bold;
-    color: #009879;
-}
-.popup-button {
-  font-family: 'Oswald', sans-serif;
-  display: inline-block;
-  font-size: 13px;
-  margin-right: 7px;
-  padding: 3px 7px;
-  background-color: grey;
-  border: 2px solid black;
-  cursor: pointer;
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 5px; 
-}
+            .styled-table tbody tr:last-of-type {
+                border-bottom: 2px solid #009879;
+            }
 
+            .styled-table tbody tr.active-row {
+                font-weight: bold;
+                color: #009879;
+            }
 
+            .popup-button {
+                font-family: 'Oswald', sans-serif;
+                display: inline-block;
+                font-size: 13px;
+                margin-right: 7px;
+                padding: 3px 7px;
+                background-color: grey;
+                border: 2px solid black;
+                cursor: pointer;
+                position: absolute;
+                top: 0;
+                left: 0;
+                border-radius: 5px;
+            }
 
-.buttons-container {
-    margin-bottom: 10px;
-}
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-}
+            .buttons-container {
+                margin-bottom: 10px;
+            }
 
-.modal-content {
-  background-color: #585656;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-}
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0, 0, 0, 0.4);
+            }
 
-.close {
-    color: #aaaaaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-.logo {
-  position: absolute;
-margin-bottom: 320px;
-margin-left: 300px;
-  width: 150px;
-  height: 150px;
-}
-.jackpots{
-position: absolute;
-bottom: 290px; 
-}
+            .modal-content {
+                background-color: #585656;
+                margin: 15% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%;
+            }
 
-.close:hover,
-.close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}
-.info{
-  position: absolute;
-  font-family: 'Oswald', sans-serif;
-  font-size: 10px;
-  top: 420px;
-}
+            .close {
+                color: #aaaaaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
 
+            .logo {
+                position: absolute;
+                margin-bottom: 300px;
+                margin-left: 390px;
+                width: 150px;
+                height: 150px;
+                
+            }
+
+            .jackpots {
+                position: absolute;
+                bottom: 345px;
+                left: 15px;
+                width: 170px;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: #000;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            .info {
+                position: absolute;
+                font-family: 'Oswald', sans-serif;
+                font-size: 10px;
+                top: 420px;
+            }
+
+            .win-chance-input {
+                font-family: 'Oswald', sans-serif;
+            }
+   
+            
+   
 </style>
     </head>
     <body>
       <body>
         <div class="main-container">
+        
           <div class="game-live-wrapper">
             <div class="game-container">
               <div class="left-container">
                 <!-- Left container content -->
+                <img src="{{ asset('icons/ethdicetest.png') }}" style="  border-radius: 20px;"  alt="Cahoot Logo" class="logo2">
                 <form class="form-container" method="POST" action="{{ route('dice.play') }}">
                   @csrf
                   <div class="win-chance-input">
-                      <label for="winChanceDisplay">Win Chance:</label>
-                      <input type="text" id="winChanceDisplay" readonly style="color: black;" disabled>
-
+                      <label for="winChanceDisplay">Choose number  </label>
+                      <input type="text" id="winChanceDisplay" readonly style="color: black; border-radius: 10px;" disabled>
                         </div>
                   <div class="bet-container">
                     <label for="betAmount">Bet Amount:</label>
-                    <input type="hidden" name="winChance" id="winChanceInput" value="{{ $winChance }}">
+                    <input type="hidden" name="winChance" id="winChanceInput" value="{{ $winChance }}" style="border-radius: 6px; width: 20px;">
                     <div class="bet-input-modifiers">
-                      <input type="number" id="betAmount" name="betAmount" min="1" max="{{ $balance }}" step="0.1" value="{{ $betAmount }}" style="color: black;"required>
+                      <input type="number" id="betAmount" placeholder="0.00" name="betAmount" min="1" max="{{ $balance }}" value="{{ $betAmount }}" >
                       <div class="bet-modifiers">
+                        <button id="btn01" class="modifier-button">0.1</button>
+                        <button id="btn1" class="modifier-button">1</button>
+                        <button id="btn10" class="modifier-button">10</button>
                         <button id="btn2x" class="modifier-button">2x</button>
                         <button id="btnMin" class="modifier-button">Min</button>
                         <button id="btnMax" class="modifier-button">Max</button>
                       </div>
                     </div>
                   </div>
-                  <button class="btn" type="submit">Roll the Dice!</button>
+                  <button class="button-69" type="submit">Roll the Dice!</button>
                 </form>
                 <div class="result">
                   @if(session('winAmount'))
                       @if(session('result') == 'win')
-                          You won {{ session('winAmount') }}!
+                          You won {{ session('winAmount') }}!  
                       @else
-                          Sorry, you lost.
+                          Sorry, you lost. 
                       @endif
                   @endif
               </div>
@@ -211,13 +233,13 @@ bottom: 290px;
                     </div>
                       <div class="win-info">
                           <div class="win-chance" style="display: inline-block;">
-                              <p>Win Chance: <span id="win-chance">{{ $winChance }}</span>%</p>
+                              <p>Win Chance:<br> </p><span id="win-chance">{{ $winChance }}</span>%
                           </div>
                           <div class="payout" style="display: inline-block; margin-left: 10px;">
-                              <p>Payout: <span id="payout">{{ $payout }}</span>x</p>
+                              <p>Multiplier:<br></p> <span id="payout">{{ $payout }}</span>x
                           </div>
                           <div class="win-amount" style="display: inline-block; margin-left: 10px;">
-                              <p>Win Amount: $<span id="win-amount">{{ $winAmount }}</span></p>
+                              <p>Win Amount:<br></p> $<span id="win-amount" style="prosent">{{ $winAmount }}</span>
                           </div>
                       </div>
 
@@ -236,7 +258,7 @@ bottom: 290px;
                         <th>User ID</th>
                         <th>Bet Amount</th>
                         <th>Win Chance</th>
-                        <th>Payout</th>
+                        <th>Multiplier</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -360,8 +382,21 @@ function updateWinAmount() {
 
 // Call updateWinAmount() to initialize win amount based on the initial bet amount
 updateWinAmount();
-
-
+document.getElementById("btn01").addEventListener("click", function(event) {
+  event.preventDefault();
+  var betAmount = document.getElementById("betAmount");
+  betAmount.value = 0.1;
+});
+document.getElementById("btn1").addEventListener("click", function(event) {
+  event.preventDefault();
+  var betAmount = document.getElementById("betAmount");
+  betAmount.value = 1;
+});
+document.getElementById("btn10").addEventListener("click", function(event) {
+  event.preventDefault();
+  var betAmount = document.getElementById("betAmount");
+  betAmount.value = 10;
+});
 document.getElementById("btn2x").addEventListener("click", function(event) {
   event.preventDefault();
   var betAmount = document.getElementById("betAmount");

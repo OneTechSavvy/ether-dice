@@ -64,29 +64,25 @@ box-shadow:  8px 8px 16px #131317,
   font-family: 'Oswald', sans-serif;
   position: absolute;
   display: inline-flex;
-  font-size: 35px;
+  font-size: 30px;
   border-radius: 2px;
   padding: 3px 6px;
-  color: gold;
+  color:white;
   border-radius: 5px;
   padding: 5px;
   align-items: center;
   justify-content: center;
-  bottom: 300px;
-  left: 130px;
+  bottom: 335px;
+  left: 190px;
 }
 
 .jackpot-coins img {
   vertical-align: middle;
   margin-right: 8px;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   
 }
-
-
-
-
 .live-container {
   display: flex;
   background-color: rgba(0,0,0,0.15);
@@ -134,8 +130,6 @@ box-shadow:  6px -6px 12px #131317,
   margin: 20px 0;
 }
 
-
-
 .win-info {
   display: flex;
   justify-content: space-between;
@@ -143,17 +137,28 @@ box-shadow:  6px -6px 12px #131317,
   margin-top: 20px;
   font-size: 18px;
   width: 100%;
-  max-width: 500px; /* Adjust this value to set the desired width */
+  max-width: 500px; 
   flex-wrap: wrap;
 }
 
-.win-chance,
-.payout,
-.win-amount {
-  flex: 1;
-  text-align: center;
-  padding: 0 5px;
+.win-chance{
+  font-family: 'Oswald', sans-serif;
+  position: absolute;
+  left: 40px;
 }
+.payout {
+  font-family: 'Oswald', sans-serif;
+  position: absolute;
+  left: 250px;
+
+}
+.win-amount {
+  font-family: 'Oswald', sans-serif;
+  position: absolute;
+  left: 450px;
+  
+}
+
 .result {
   margin-top: 20px;
   font-size: 24px;
@@ -171,91 +176,88 @@ box-shadow:  6px -6px 12px #131317,
 label {
   margin-top: 10px;
 }
-
 input[type="number"] {
   width: 100%;
   margin-bottom: 10px;
+
 }
+
+
 
 .button-69 {
-  background-color: initial;
-  background-image: linear-gradient(#921313 0, #760be0 100%);
-  border-radius: 5px;
-  border-style: none;
-  box-shadow: rgba(245, 244, 247, .25) 0 1px 1px inset;
-  color: #fff;
-  cursor: pointer;
-  display: inline-block;
-  font-family: Inter, sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  height: 60px;
-  line-height: 60px;
-  margin-left: -4px;
-  outline: 0;
-  text-align: center;
-  transition: all .3s cubic-bezier(.05, .03, .35, 1);
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  vertical-align: bottom;
-  width: 190px;
-}
 
-.button-69:hover {
-  opacity: .7;
 }
-
-@media screen and (max-width: 1000px) {
-  .button-69 {
-    font-size: 14px;
-    height: 55px;
-    line-height: 55px;
-    width: 150px;
-  }
-}
-
  .bet-container {
+  font-family: 'Oswald', sans-serif;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
 .bet-input-modifiers {
+  margin-left: 5px;
   display: inline-flex;
-  align-items: stretch;
-}
 
-#betAmount {
-  width: 80px;
-  border: none;
-  border-right: 1px solid orange;
-  padding-left: 5px;
-  padding-top: 6px;
-  padding-bottom: 6px;
 }
-
-.bet-modifiers {
-  display: flex;
+#btn01, #btn2x {
+  margin-left: 2px;
+ 
 }
 
 .modifier-button {
+  font-family: 'Oswald', sans-serif;
   background-color: orange;
-  border: none;
   color: black;
   text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  margin: 0;
+  font-size: 11px;
   cursor: pointer;
-  padding: 6px 10px;
-  transition: all 0.5s ease;
+  width: 30px;
+  height: 20px;
+  border-radius: 5px;
+  padding: 0px;
 }
 
+input::placeholder {
+  color: white; /* Set the text color */
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px; /* Set the font size */
+}
+#betAmount {
+  font-family: 'Oswald', sans-serif;
+  width: 70px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid white;
+  font-size: 14px;
+  background: linear-gradient(21deg, #4c4d4e, #f3f3f3);	
+  background-image: url('../icons/coins3.png');
+  background-size: 15px;
+  background-repeat:no-repeat;
+  padding-left:27px;
+  background-position: 5px 5px; /* Move the background image 5 pixels to the right */
+  margin-bottom: 20px;
+  margin-top: 7px;
+}
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
 .modifier-button:hover {
   color: black;
   opacity: 0.7;
 }
+#winChanceDisplay{
+  font-family: 'Oswald', sans-serif;
+  background: linear-gradient(21deg, #4c4d4e, #f3f3f3);	
+  padding-left:27px;
+  color: white;
 
+}
  
