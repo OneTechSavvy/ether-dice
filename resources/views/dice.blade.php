@@ -145,7 +145,7 @@
               <div class="left-container">
                 <!-- Left container content -->
                 <img src="{{ asset('icons/ethdicetest.png') }}" style="  border-radius: 20px;"  alt="Cahoot Logo" class="logo2">
-                <form class="form-container" method="POST" action="{{ route('dice.play') }}">
+                <form id="dice-form" class="form-container" method="POST" action="{{ route('dice.play') }}">
                   @csrf
                   <div class="win-chance-input">
                       <label for="winChanceDisplay">Choose number  </label>
@@ -155,7 +155,7 @@
                     <label for="betAmount">Bet Amount:</label>
                     <input type="hidden" name="winChance" id="winChanceInput" value="{{ $winChance }}" style="border-radius: 6px; width: 20px;">
                     <div class="bet-input-modifiers">
-                      <input type="number" id="betAmount" placeholder="0.00" name="betAmount" min="1" max="{{ $balance }}" value="{{ $betAmount }}" >
+                      <input type="number" id="betAmount" placeholder="0.00" name="betAmount" min="1" max="{{ $balance }}" value="{{ session('betAmount', $betAmount) }}" required>
                       <div class="bet-modifiers">
                         <button id="btn01" class="modifier-button">0.1</button>
                         <button id="btn1" class="modifier-button">1</button>
@@ -225,7 +225,7 @@
               
 
                     <div class= "mid-div">
-                      <input type="range" min="5" max="95" value="{{ $winChance }}" id="slider" name="winChance" style="width: 600px;">
+                      <input type="range" min="5" max="95" value="{{ session('winChance', $winChance) }}" id="slider" name="winChance" style="width: 600px;">
                       <div id="selector">
                           <div class="selectBtn"></div>
                           <div id="selectValue"></div>
@@ -338,7 +338,40 @@
             };
         });
         </script>
-        
+<script>
+const form = document.getElementById('dice-form');
+const rollButton = document.querySelector('.button-69');
+const resultDiv = document.querySelector('.result');
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault(); // prevent the form from submitting normally
+
+  // send an AJAX request to the server with the form data
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', form.action);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText);
+        if (response.winAmount) {
+          resultDiv.innerHTML = response.result == 'win' ? `You won ${response.winAmount}!` : 'Sorry, you lost.';
+          resultDiv.style.display = 'block';
+        } else {
+          resultDiv.style.display = 'none';
+        }
+        // handle success response here
+      } else {
+        console.log('Error:', xhr.status);
+        // handle error response here
+      }
+    }
+  };
+  const data = new FormData(form);
+  xhr.send(new URLSearchParams(data));
+});
+
+</script>
         <script>
           
             // Get the range input field and the win chance, payout, and win amount elements
