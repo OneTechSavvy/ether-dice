@@ -34,6 +34,9 @@ class DiceController extends Controller
             $jackpot = House::where('name', 'DiceJackpot')->first();
             $jackpotCoins = $jackpot ? $jackpot->coins : 0;
         }
+        $jackpot = House::where('name', 'DiceJackpot')->first();
+        $jackpotCoins = $jackpot ? $jackpot->coins : 0;
+        
         $biggestWins = Cache::remember('biggest_wins', 3600, function () {
             return DiceGame::where('result', 'win')
                 ->where('created_at', '>=', now()->subDay())
@@ -182,6 +185,7 @@ public function play(Request $request)
     return redirect()->route('dice')->with([
         'winAmount' => $winAmount,
         'result' => $result,
+        'rand_num' => $randNum,
     ]);
 
  
