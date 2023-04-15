@@ -114,7 +114,7 @@
                 </div>
             </div>
             <div class="val-box">
-                <i class="fas fa-acorn"></i>
+                <i class="fas fa-dollar-sign"></i>
                 <div>
                     <h3>215,542</h3>
                     <span>Products Sell</span>
@@ -124,7 +124,7 @@
                 <i class="fas fa-dollar-sign"></i>
                 <div>
                     <h3>${{ $balance }}</h3>
-                    <span>This Month</span>
+                    <span>Dice Profit</span>
                 </div>
             </div>
         </div>

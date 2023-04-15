@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Cron\CronExpression;
 
 class Kernel extends ConsoleKernel
 {
@@ -16,7 +17,8 @@ class Kernel extends ConsoleKernel
             app('App\Http\Controllers\EtherscanController')->getSuccessfulTransactions(request());
         })->everyMinute();
         $schedule->command('dice:biggestwins')->hourly();
-        $schedule->command('jackpot:play')->cron('*/30 * * * * *');
+        $schedule->command('fetch:successful-transactions')->everyFiveMinutes();
+
     }
     
     /**

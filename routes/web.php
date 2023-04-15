@@ -16,7 +16,7 @@ use App\Http\Controllers\WithdrawController;
 use App\Http\Controllers\MatchBettingController;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Http\Controllers\SSEController;
-use App\Http\Controllers\GasController;
+
 
 
 
@@ -60,7 +60,6 @@ Route::middleware([
 Route::get('/', [DiceController::class, 'index'])->name('home');
 Route::post('/crypto-wallets', 'App\Http\Controllers\CryptoWalletsController@update')->name('crypto-wallets.update');
 Route::get('/test-connection', [App\Http\Controllers\EthereumController::class, 'testConnection']);
-Route::get('/etherscan/successful-transactions', [EtherscanController::class, 'getSuccessfulTransactions']);
 Route::get('/dice', [DiceController::class, 'index'])->name('dice');
 Route::post('/dice/play', [DiceController::class, 'play'])->middleware('auth')->name('dice.play');
 
@@ -70,7 +69,6 @@ Route::post('/withdraw', [WithdrawController::class, 'store'])->name('withdraw.s
 
 Route::get('/withdraw/eth', [WithdrawController::class, 'showETHWithdrawForm'])->name('withdraw.eth');
 
-Route::get('/gas', [WithdrawController::class, 'showGas'])->name('gas.show');
 
 
 
