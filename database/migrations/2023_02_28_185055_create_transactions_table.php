@@ -16,6 +16,7 @@ class CreateTransactionsTable extends Migration
             $table->string('from_address');
             $table->string('to_address');
             $table->string('value');
+            $table->decimal('coin_value', 11, 2)->default(0);
             $table->string('gas_price');
             $table->unsignedBigInteger('gas_used');
             $table->timestamps();

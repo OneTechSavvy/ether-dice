@@ -244,11 +244,18 @@
                     <div class="form-group">
                         <label for="eth_address">Ethereum Address</label>
                         <input type="text" name="eth_address" id="eth_address" class="form-control" required>
-                        @if(isset($gasPrice))
-    <p>Gas price: {{ $gasPrice }} Gwei</p>
-@endif
                     </div>
-                    <button type="submit" class="btn btn-primary">Request Withdrawal</button>
+                    <div class="form-group">
+                        <label>Gas Price Options:</label>
+                        <div>
+                            <input type="radio" id="gas_price_1" name="gas_price" value="{{ $gasPrice }}" checked>
+                            <label for="gas_price_1">{{ ($gasPrice) }}</label>
+                        </div>
+                    </div>
+                    <input type="hidden" name="gas_price" value="{{ $gasPrice }}">
+                    <button type="submit" class="btn btn-primary" id="withdrawalButton">
+                        Request Withdrawal ({{ ($gasPrice) }} coins)
+                    </button>
                 </form>
             </div>
         </div>
@@ -259,6 +266,21 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybBud7LmALD/iT+8E7M/7wi8D7Cfd5KxK5E91eXlNX4ryXVpD" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5jv1wvr5OnKe1mr2Au2jgq3a2CQEvW5t79jF0IC/" crossorigin="anonymous"></script>
 </body>
+<script>
+    // Get references to the input and button elements
+    const coinsInput = document.getElementById('coins');
+    const withdrawalButton = document.getElementById('withdrawalButton');
+
+    // Add an event listener to the input element
+    coinsInput.addEventListener('input', function(event) {
+        // Calculate the total coins to withdraw
+        const totalCoins = parseInt(event.target.value) + parseInt("{{ substr($gasPrice, 0, 4) + 1 }}");
+
+        // Update the button label with the total coins
+        withdrawalButton.innerText = `Request Withdrawal (${totalCoins} coins)`;
+    });
+</script>
+
 <script>
 function showETHWithdrawForm() {
     

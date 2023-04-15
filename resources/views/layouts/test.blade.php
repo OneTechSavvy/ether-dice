@@ -240,7 +240,9 @@ p {
   min-height: 100%;
   
 }
-
+.logo {
+  width: 400px; 
+}
 
 
 </style>
@@ -253,11 +255,9 @@ p {
     <nav class="navbar navbar-expand-sm navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
-                <img src="{{ asset('icons/ethdicelogo.png') }}" alt="Cahoot Logo" class="logo">
+                <img src="{{ asset('icons/ethdicelogo.png') }}" style="margin-left: 200px;"  alt="Cahoot Logo" style="logo">
             </a>
-            <a class="navbar-brand" href="{{ url('/') }}">
-                <img src="{{ asset('icons/winlogo.png') }}" alt="Cahoot Logo" class="logo2">
-            </a>
+           
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                 <span class="navbar-toggler-icon"></span>
             </button>

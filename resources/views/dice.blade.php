@@ -46,14 +46,22 @@
     color: #009879;
 }
 .popup-button {
+  font-family: 'Oswald', sans-serif;
   display: inline-block;
-    margin-right: 10px;
-    padding: 5px 10px;
-    background-color: #494949;
-    border: none;
-    cursor: pointer;
-
+  font-size: 13px;
+  margin-right: 7px;
+  padding: 3px 7px;
+  background-color: grey;
+  border: 2px solid black;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 5px; 
 }
+
+
+
 .buttons-container {
     margin-bottom: 10px;
 }
@@ -70,7 +78,7 @@
 }
 
 .modal-content {
-    background-color: #585656;
+  background-color: #585656;
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
@@ -83,6 +91,17 @@
     font-size: 28px;
     font-weight: bold;
 }
+.logo {
+  position: absolute;
+margin-bottom: 320px;
+margin-left: 300px;
+  width: 150px;
+  height: 150px;
+}
+.jackpots{
+position: absolute;
+bottom: 290px; 
+}
 
 .close:hover,
 .close:focus {
@@ -90,7 +109,14 @@
     text-decoration: none;
     cursor: pointer;
 }
-        </style>
+.info{
+  position: absolute;
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  top: 420px;
+}
+
+</style>
     </head>
     <body>
       <body>
@@ -110,7 +136,7 @@
                     <label for="betAmount">Bet Amount:</label>
                     <input type="hidden" name="winChance" id="winChanceInput" value="{{ $winChance }}">
                     <div class="bet-input-modifiers">
-                      <input type="number" id="betAmount" name="betAmount" min="1" max="{{ $balance }}" value="{{ $betAmount }}" style="color: black;"required>
+                      <input type="number" id="betAmount" name="betAmount" min="1" max="{{ $balance }}" step="0.1" value="{{ $betAmount }}" style="color: black;"required>
                       <div class="bet-modifiers">
                         <button id="btn2x" class="modifier-button">2x</button>
                         <button id="btnMin" class="modifier-button">Min</button>
@@ -118,7 +144,7 @@
                       </div>
                     </div>
                   </div>
-                  <button class="button-69" type="submit">Roll the Dice!</button>
+                  <button class="btn" type="submit">Roll the Dice!</button>
                 </form>
                 <div class="result">
                   @if(session('winAmount'))
@@ -133,10 +159,11 @@
               <div class="right-container">
                 <!-- Right container content -->
                 <div class="buttons-container">
-                  <button id="button1" class="popup-button">Jackpot</button>
-                  <button id="button2" class="popup-button">Fairness</button>
+                  <button id="button1"style="margin-left: 2px;" class="popup-button">Jackpot</button>
+                  <button id="button2" style="margin-left: 65px;" class="popup-button">Fairness</button>
               </div>
-          
+              <img src="{{ asset('icons/winthejackpot.png') }}" alt="Cahoot Logo" class="logo">
+
                  <!-- Add the first modal (initially hidden) -->
                 <div id="modal1" class="modal">
                   <div class="modal-content">
@@ -167,10 +194,13 @@
                 <form method="GET" action="{{ route('dice.play') }}">
                   @csrf
                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
-    
+                 <div class="jackpots"> <img src="{{ asset('icons/jackpots.png') }}" alt="Cahoot Logo"> </div>
                       <div class="jackpot-coins">
-                          <span class="jackpot-text">Jackpot:</span> <span class="jackpot-value">{{ $jackpotCoins }}</span>
+                      <img src="{{ asset('img/coins2.png') }}" alt="Coin Icon" height="20px" width="20px" >
+                      <span class="jackpot-value">{{ $jackpotCoins }}  </span>
+
                       </div>
+              
 
                     <div class= "mid-div">
                       <input type="range" min="5" max="95" value="{{ $winChance }}" id="slider" name="winChance" style="width: 600px;">
@@ -189,6 +219,12 @@
                           <div class="win-amount" style="display: inline-block; margin-left: 10px;">
                               <p>Win Amount: $<span id="win-amount">{{ $winAmount }}</span></p>
                           </div>
+                      </div>
+
+                      <div class="info">
+                            1 ethdice coin is worth approximately $0.5. Chance of winning jackpot is 1/100 000 when betting atleast 1 coin. <br>
+                            Chosen win chance does not matter - chance of winning the jackpot stays the same! 
+
                       </div>
               </form>
               </div>
