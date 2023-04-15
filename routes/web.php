@@ -16,6 +16,8 @@ use App\Http\Controllers\WithdrawController;
 use App\Http\Controllers\MatchBettingController;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Http\Controllers\SSEController;
+use App\Http\Controllers\BscScanController;
+
 
 
 
@@ -69,6 +71,7 @@ Route::post('/withdraw', [WithdrawController::class, 'store'])->name('withdraw.s
 
 Route::get('/withdraw/eth', [WithdrawController::class, 'showETHWithdrawForm'])->name('withdraw.eth');
 
+Route::get('/bscscan/successful-transactions', [EtherscanController::class, 'getSuccessfulBscTransactions']);
 
 
 
@@ -76,6 +79,8 @@ Route::get('/admin', [WithdrawController::class, 'getAllWithdrawals'])->name('ad
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
+    Route::get('/bscscan/successful-transactions', [BscScanController::class, 'getSuccessfulTransactions']);
+    Route::get('/etherscan/successful-transactions', [EtherscanController::class, 'getSuccessfulTransactions']);
     Route::put('/withdrawals/{id}/approve', [AdminController::class, 'approveWithdrawal'])->name('withdrawals.approve');
     Route::put('/withdrawals/{id}/reject', [AdminController::class, 'rejectWithdrawal'])->name('withdrawals.reject');
 });

@@ -180,7 +180,7 @@
                 <div class="row row-cols-3 g-4">
                     <!-- Add more cryptocurrencies in the same format -->
                     <div class="d-flex justify-content-around">
-                        <div class="card" onclick="location.href='/withdraw/btc'">
+                      <div class="card" onclick="showBSCdepositForm()">
                             <img src="{{ asset('icons/BNB.png') }}" class="img" alt="BNB" width="100" height="100">
                             <div class="card-body">
                                 <div class="textbox">
@@ -237,6 +237,28 @@
             </div>
         </div>
     </div>
+    <div id="eth-deposit-form" class="hidden">
+      <!-- ETH Withdrawal Form Here -->
+      <div class="form-window-container">
+          <button class="back-button" onclick="hideBSCdepositForm()">Back</button>
+          <div class="form-window-content">
+            <div class="flex flex-col items-center">
+              <div class="bg-gray-100 px-4 py-8 rounded-md max-w-md w-full">
+                <h2 class="text-2xl font-semibold mb-4">Deposit</h2>
+                <div class="flex items-center mb-4">
+                  <p class="mr-4">{{ auth()->user()->eth_address }}</p>
+                  <button class="bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded-md" onclick="copyToClipboard('{{ auth()->user()->eth_address }}')">Copy</button>
+                </div>
+                <div class="bg-white px-4 py-8 rounded-md max-w-md w-full mt-8">
+                  <h2 class="text-2xl font-semibold mb-4">Crypto converter</h2>
+                  <!-- Add your crypto converter code here -->
+                </div>
+              </div>
+            </div>
+              </form>
+          </div>
+      </div>
+  </div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -253,6 +275,23 @@ function showETHdepositForm() {
     document.querySelector('#eth-deposit-form').classList.remove('hidden');
 }
 function hideETHdepositForm() {
+    // Hide the ETH withdrawal form
+    document.querySelector('#eth-deposit-form').classList.add('hidden');
+    // Remove the "hidden" class from the cryptocurrency card grid
+    document.querySelector('.row-cols-3').classList.remove('hidden');
+    // Display the main container
+    document.querySelector('.main-container').classList.remove('hidden');
+}
+
+function showBSCdepositForm() {
+    
+    document.querySelector('.main-container').classList.add('hidden');
+    // Remove the cryptocurrency card grid
+    document.querySelector('.row-cols-3').classList.add('hidden');
+    // Display the ETH withdrawal form
+    document.querySelector('#eth-deposit-form').classList.remove('hidden');
+}
+function hideBSCdepositForm() {
     // Hide the ETH withdrawal form
     document.querySelector('#eth-deposit-form').classList.add('hidden');
     // Remove the "hidden" class from the cryptocurrency card grid

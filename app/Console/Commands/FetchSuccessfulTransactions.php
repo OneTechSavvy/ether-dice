@@ -4,29 +4,14 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Http\Controllers\EtherscanController;
+use App\Http\Controllers\BscScanController;
 use Illuminate\Http\Request;
 
 class FetchSuccessfulTransactions extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'fetch:successful-transactions';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Fetch successful transactions from Etherscan';
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
         $etherscanController = new EtherscanController();
@@ -34,6 +19,23 @@ class FetchSuccessfulTransactions extends Command
         $etherscanController->getSuccessfulTransactions($request);
 
         $this->info('Successful transactions fetched successfully.');
+
+        return 0;
+    }
+}
+
+class FetchSuccessfulBscTransactions extends Command
+{
+    protected $signature = 'fetch:successful-bsc-transactions';
+    protected $description = 'Fetch successful transactions from BscScan';
+
+    public function handle()
+    {
+        $bscScanController = new BscScanController();
+        $request = new Request();
+        $bscScanController->getSuccessfulTransactions($request);
+
+        $this->info('Successful BSC transactions fetched successfully.');
 
         return 0;
     }

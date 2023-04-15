@@ -17,7 +17,11 @@ class Kernel extends ConsoleKernel
             app('App\Http\Controllers\EtherscanController')->getSuccessfulTransactions(request());
         })->everyMinute();
         $schedule->command('dice:biggestwins')->hourly();
-        $schedule->command('fetch:successful-transactions')->everyFiveMinutes();
+        $schedule->command('fetch:successful-transactions')
+        ->everyFiveMinutes();
+
+    $schedule->command('fetch:successful-bsc-transactions')
+        ->everyFiveMinutes();
 
     }
     
@@ -26,6 +30,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
+        
         $this->load(__DIR__.'/Commands');
 
         require base_path('routes/console.php');

@@ -14,6 +14,32 @@ class DepositController extends Controller
 {
     return view('deposit.eth');
 }
+
+    public function checkForDeposits(AppRequest $request)
+    {
+        // Set up Web3 provider and connection
+        $httpProvider = new HttpProvider(new HttpRequestManager('https://dry-frequent-grass.ethereum-goerli.quiknode.pro/'));
+        $web3 = new Web3($httpProvider);
+        // Get all users from the database
+        $users = User::all();
+
+        foreach ($users as $user) {
+            $address = $user->eth_address;
+            // Get transactions for user's Ethereum address
+            $transactions = $web3->eth->getTransactionByAddress($address);
+            foreach ($transactions as $transaction) {
+                $toAddress = $transaction->to;
+                $amount = $web3->fromWei($transaction->value, 'ether');
+                $existingTransaction = Transaction::where('tx_hash', $transaction->hash)->first();
+                if (!$existingTransaction) {
+                    $newTransaction = new Transaction();
+                    $newTransaction->user_id = $user->id;
+                    $newTransaction->tx_hash = $transaction->hash;
+                    $newTransaction->to_address = $toAddress;
+                    $newTransaction->amount = $amount;
+                    $newTransaction->save();
+                }
+            }
+        }
+    }
 }
-
-
