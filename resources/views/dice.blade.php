@@ -145,7 +145,7 @@
               <div class="left-container">
                 <!-- Left container content -->
                 <img src="{{ asset('icons/ethdicetest.png') }}" style="  border-radius: 20px;"  alt="Cahoot Logo" class="logo2">
-                <form id="dice-form" class="form-container" method="POST" action="{{ route('dice.play') }}">
+                <form class="form-container" method="POST" action="{{ route('dice.play') }}">
                   @csrf
                   <div class="win-chance-input">
                       <label for="winChanceDisplay">Choose number  </label>
@@ -338,40 +338,7 @@
             };
         });
         </script>
-<script>
-const form = document.getElementById('dice-form');
-const rollButton = document.querySelector('.button-69');
-const resultDiv = document.querySelector('.result');
-
-form.addEventListener('submit', function(e) {
-  e.preventDefault(); // prevent the form from submitting normally
-
-  // send an AJAX request to the server with the form data
-  const xhr = new XMLHttpRequest();
-  xhr.open('POST', form.action);
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === XMLHttpRequest.DONE) {
-      if (xhr.status === 200) {
-        const response = JSON.parse(xhr.responseText);
-        if (response.winAmount) {
-          resultDiv.innerHTML = response.result == 'win' ? `You won ${response.winAmount}!` : 'Sorry, you lost.';
-          resultDiv.style.display = 'block';
-        } else {
-          resultDiv.style.display = 'none';
-        }
-        // handle success response here
-      } else {
-        console.log('Error:', xhr.status);
-        // handle error response here
-      }
-    }
-  };
-  const data = new FormData(form);
-  xhr.send(new URLSearchParams(data));
-});
-
-</script>
+        
         <script>
           
             // Get the range input field and the win chance, payout, and win amount elements
