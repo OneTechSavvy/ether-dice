@@ -181,7 +181,8 @@ public function play(Request $request)
     });
         
 
-    
+    session(['betAmount' => $betAmount]);
+    session(['winChance' => $winChance]);
     return redirect()->route('dice')->with([
         'winAmount' => $winAmount,
         'result' => $result,
