@@ -8,13 +8,14 @@
       <link rel="stylesheet" href="{{ asset('css/dice.css') }}">
         <style>
             .styled-table {
+              font-family: 'Oswald', sans-serif;
                 position: relative;
-                top: 40px;
+                top: 5px;
                 border-spacing: 0;
                 border-collapse: separate;
-                margin: 25px 0;
-                font-size: 0.9em;
-                font-family: sans-serif;
+                margin: 10px 0;
+                font-size: 0.75em;
+                
                 
                 box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
                 border-radius: 10px;
@@ -22,33 +23,37 @@
             }
 
             .styled-table thead tr {
-                background-color: grey;
-                color: #ffffff;
+            
+              background-color: orange;
+                color: black;
                 text-align: left;
-                border: 1px solid black;
-                border-radius: 20px;
+                font-size: 14px;
             }
 
             .styled-table th,
             .styled-table td {
-                padding: 7px 11px;
+                padding: 4px 11px;
             }
 
             .styled-table tbody tr {
-              
-                border-bottom: 1px solid #dddddd;
+              border-bottom: 1px solid #dddddd;
+               
+                
             }
 
             .styled-table tbody tr:nth-of-type(even) {
-                background-color: #504f4f;
+              background-color: black;
+                
             }
 
             .styled-table tbody tr:last-of-type {
                 border-bottom: 2px solid #009879;
+                font-family: 'Oswald', sans-serif;
             }
 
             .styled-table tbody tr.active-row {
                 font-weight: bold;
+              
                 color: #009879;
             }
 
@@ -87,7 +92,7 @@
                 background-color: #585656;
                 margin: 15% auto;
                 padding: 20px;
-                border: 1px solid #888;
+                border: 1px solid orange;
                 width: 80%;
             }
 
@@ -104,15 +109,10 @@
                 margin-left: 390px;
                 width: 150px;
                 height: 150px;
-                
+                opacity: 0.7;
             }
 
-            .jackpots {
-                position: absolute;
-                bottom: 345px;
-                left: 15px;
-                width: 170px;
-            }
+            
 
             .close:hover,
             .close:focus {
@@ -131,6 +131,7 @@
             .win-chance-input {
                 font-family: 'Oswald', sans-serif;
             }
+         
    
             
    
@@ -144,7 +145,7 @@
             <div class="game-container">
               <div class="left-container">
                 <!-- Left container content -->
-                <img src="{{ asset('icons/ethdicetest.png') }}" style="  border-radius: 20px;"  alt="Cahoot Logo" class="logo2">
+                
                 <form class="form-container" method="POST" action="{{ route('dice.play') }}">
                   @csrf
                   <div class="win-chance-input">
@@ -184,7 +185,7 @@
                   <button id="button1"style="margin-left: 2px;" class="popup-button">Jackpot</button>
                   <button id="button2" style="margin-left: 65px;" class="popup-button">Fairness</button>
               </div>
-              <img src="{{ asset('icons/winthejackpot.png') }}" alt="Cahoot Logo" class="logo">
+              <img src="{{ asset('icons/winthejackpottr.png') }}" alt="Cahoot Logo" class="logo">
 
                  <!-- Add the first modal (initially hidden) -->
                 <div id="modal1" class="modal">
@@ -216,7 +217,7 @@
                 <form method="GET" action="{{ route('dice.play') }}">
                   @csrf
                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                 <div class="jackpots"> <img src="{{ asset('icons/jackpots.png') }}" alt="Cahoot Logo"> </div>
+                      <h1> JACKPOT: </h1>
                       <div class="jackpot-coins">
                       <img src="{{ asset('img/coins2.png') }}" alt="Coin Icon" height="20px" width="20px" >
                       <span class="jackpot-value">{{ $jackpotCoins }}  </span>
@@ -255,10 +256,10 @@
               <table id="new-games-table" class="styled-table">
                 <thead>
                     <tr>
-                        <th>User ID</th>
+                        <th>User</th>
                         <th>Bet Amount</th>
                         <th>Win Chance</th>
-                        <th>Multiplier</th>
+                        <th>Won</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -267,7 +268,7 @@
                             <td>{{ $game->user->name }}</td>
                             <td>{{ $game->bet_amount }}</td>
                             <td>{{ $game->win_chance }}</td>
-                            <td>{{ $game->payout }}</td>
+                            <td>{{ $game->winAmount }}</td>
                         </tr>
                     @endforeach
                     <!-- New games will be added here dynamically using JavaScript -->
