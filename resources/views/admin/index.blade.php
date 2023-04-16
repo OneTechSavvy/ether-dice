@@ -114,17 +114,17 @@
                 </div>
             </div>
             <div class="val-box">
-                <i class="fas fa-acorn"></i>
+                <i class="fas fa-dollar-sign"></i>
                 <div>
-                    <h3>215,542</h3>
-                    <span>Products Sell</span>
+                    <h3> ${{ $siteProfit }}</h3>
+                    <span>Site Profit</span>
                 </div>
             </div>
             <div class="val-box">
                 <i class="fas fa-dollar-sign"></i>
                 <div>
                     <h3>${{ $balance }}</h3>
-                    <span>This Month</span>
+                    <span>Dice tax Profit</span>
                 </div>
             </div>
         </div>
@@ -143,7 +143,7 @@
                     </thead>
                     <tbody>
                         @foreach($withdrawals as $withdrawal)
-                        <tr>
+                        <tr id="withdrawal-{{ $withdrawal->id }}">
                             <td class="people">
                                 <div class="people-de">
                                     <h5>{{ $withdrawal->user->name }}</h5>
@@ -164,7 +164,8 @@
                                 <form method="POST" action="{{ route('withdrawals.approve', $withdrawal->id) }}">
                                     @csrf
                                     @method('PUT')
-                                    <button type="submit" class="button confirm">Confrim</button>
+                                    <button type="submit" class="button confirm" onclick="hideWithdrawalRow({{ $withdrawal->id }})">Confrim</button>
+
                                 </form>
                                 <form method="POST" action="{{ route('withdrawals.reject', $withdrawal->id) }}">
                                     @csrf
@@ -186,6 +187,12 @@
             $('#menu').toggleClass("active");
         })
     </script>
+    <script>
+        function hideWithdrawalRow(withdrawalId) {
+            document.getElementById('withdrawal-' + withdrawalId).style.display = 'none';
+        }
+    </script>
+    
 
 </body>
 

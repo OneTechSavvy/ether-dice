@@ -16,7 +16,9 @@ use App\Http\Controllers\WithdrawController;
 use App\Http\Controllers\MatchBettingController;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Http\Controllers\SSEController;
-use App\Http\Controllers\GasController;
+use App\Http\Controllers\BscScanController;
+
+
 
 
 
@@ -60,7 +62,6 @@ Route::middleware([
 Route::get('/', [DiceController::class, 'index'])->name('home');
 Route::post('/crypto-wallets', 'App\Http\Controllers\CryptoWalletsController@update')->name('crypto-wallets.update');
 Route::get('/test-connection', [App\Http\Controllers\EthereumController::class, 'testConnection']);
-Route::get('/etherscan/successful-transactions', [EtherscanController::class, 'getSuccessfulTransactions']);
 Route::get('/dice', [DiceController::class, 'index'])->name('dice');
 Route::post('/dice/play', [DiceController::class, 'play'])->middleware('auth')->name('dice.play');
 
@@ -70,7 +71,7 @@ Route::post('/withdraw', [WithdrawController::class, 'store'])->name('withdraw.s
 
 Route::get('/withdraw/eth', [WithdrawController::class, 'showETHWithdrawForm'])->name('withdraw.eth');
 
-Route::get('/gas', [WithdrawController::class, 'showGas'])->name('gas.show');
+Route::get('/bscscan/successful-transactions', [EtherscanController::class, 'getSuccessfulBscTransactions']);
 
 
 
@@ -78,6 +79,8 @@ Route::get('/admin', [WithdrawController::class, 'getAllWithdrawals'])->name('ad
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
+    Route::get('/bscscan/successful-transactions', [BscScanController::class, 'getSuccessfulTransactions']);
+    Route::get('/etherscan/successful-transactions', [EtherscanController::class, 'getSuccessfulTransactions']);
     Route::put('/withdrawals/{id}/approve', [AdminController::class, 'approveWithdrawal'])->name('withdrawals.approve');
     Route::put('/withdrawals/{id}/reject', [AdminController::class, 'rejectWithdrawal'])->name('withdrawals.reject');
 });

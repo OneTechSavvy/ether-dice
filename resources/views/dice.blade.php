@@ -156,7 +156,7 @@
                     <label for="betAmount">Bet Amount:</label>
                     <input type="hidden" name="winChance" id="winChanceInput" value="{{ $winChance }}" style="border-radius: 6px; width: 20px;">
                     <div class="bet-input-modifiers">
-                      <input type="number" id="betAmount" placeholder="0.00" name="betAmount" min="1" max="{{ $balance }}" value="{{ $betAmount }}" >
+                      <input type="number" id="betAmount" placeholder="0.00" name="betAmount" min="1" max="{{ $balance }}" value="{{ session('betAmount', $betAmount) }}" required>
                       <div class="bet-modifiers">
                         <button id="btn01" class="modifier-button">0.1</button>
                         <button id="btn1" class="modifier-button">1</button>
@@ -226,7 +226,7 @@
               
 
                     <div class= "mid-div">
-                      <input type="range" min="5" max="95" value="{{ $winChance }}" id="slider" name="winChance" style="width: 600px;">
+                      <input type="range" min="5" max="95" value="{{ session('winChance', $winChance) }}" id="slider" name="winChance" style="width: 600px;">
                       <div id="selector">
                           <div class="selectBtn"></div>
                           <div id="selectValue"></div>
