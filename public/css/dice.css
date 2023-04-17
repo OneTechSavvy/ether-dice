@@ -35,6 +35,7 @@ box-shadow:  8px 8px 16px #131317,
 }
 
 .left-container {
+  position: relative;
   display: flex;
   background-color: rgba(0,0,0,0.25);
   flex-direction: column;
@@ -67,23 +68,15 @@ box-shadow:  8px 8px 16px #131317,
   font-size: 30px;
   border-radius: 2px;
   padding: 3px 6px;
-  color:orange;
+  color:rgba(218, 133, 35, 0.904);
   border-radius: 5px;
   padding: 5px;
   align-items: center;
   justify-content: center;
   bottom: 392px;
-  left: 140px;
+  left: 340px;
 }
-h1{
-  font-family: 'Oswald', sans-serif;
-  color: orange;
-  position: absolute;
-  bottom: 400px;
-  left: 15px;
-  width: 170px;
-  font-size: 30px;
-}
+
 
 .jackpot-coins img {
   vertical-align: middle;
@@ -137,6 +130,7 @@ box-shadow:  6px -6px 12px #131317,
   
   width: 80%;
   margin: 20px 0;
+ 
 }
 
 .win-info {
@@ -374,5 +368,6 @@ input[type=number] {
  
 #button2, #button1{
   border: 1px solid orange;
+  background-color: #131317;
 
 }

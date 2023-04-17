@@ -23,7 +23,7 @@
             }
 
             .styled-table thead tr {
-            
+             
               background-color: orange;
                 color: black;
                 text-align: left;
@@ -33,22 +33,26 @@
             .styled-table th,
             .styled-table td {
                 padding: 4px 11px;
+                
             }
 
             .styled-table tbody tr {
               border-bottom: 1px solid #dddddd;
+
+              
                
                 
             }
 
             .styled-table tbody tr:nth-of-type(even) {
               background-color: black;
-                
+            
             }
 
             .styled-table tbody tr:last-of-type {
                 border-bottom: 2px solid #009879;
                 font-family: 'Oswald', sans-serif;
+                
             }
 
             .styled-table tbody tr.active-row {
@@ -89,11 +93,11 @@
             }
 
             .modal-content {
-                background-color: #585656;
+                background-color: black;
                 margin: 15% auto;
                 padding: 20px;
                 border: 1px solid orange;
-                width: 80%;
+                width: 40%;
             }
 
             .close {
@@ -132,7 +136,32 @@
                 font-family: 'Oswald', sans-serif;
             }
          
-   
+            #dice1{
+              width: 100px;
+              position: absolute;
+              bottom: 370px;
+              left: 40px;
+              transform: rotate(70deg);
+              transform: rotate(0.25turn);
+            }
+            #dice2{
+              bottom: 400px;
+              position: absolute;
+              width: 100px;   
+              left: 90px;
+              
+              transform: rotate(40deg);
+              transform: rotate(-0.25turn);
+          }
+          #winthe{
+            position: absolute;
+            width: 300px;
+            top: 60px;
+            right: 300px;
+          }
+
+
+        
             
    
 </style>
@@ -145,7 +174,8 @@
             <div class="game-container">
               <div class="left-container">
                 <!-- Left container content -->
-                
+                <img src="{{ asset('icons/dice.png') }}" id= "dice1"  alt="Cahoot Logo">
+                <img src="{{ asset('icons/dice.png') }}" id= "dice2"  alt="Cahoot Logo">
                 <form class="form-container" method="POST" action="{{ route('dice.play') }}">
                   @csrf
                   <div class="win-chance-input">
@@ -185,7 +215,7 @@
                   <button id="button1"style="margin-left: 2px;" class="popup-button">Jackpot</button>
                   <button id="button2" style="margin-left: 65px;" class="popup-button">Fairness</button>
               </div>
-              <img src="{{ asset('icons/winthejackpottr.png') }}" alt="Cahoot Logo" class="logo">
+              <img src="{{ asset('icons/winthejackpot.png') }}" alt="Cahoot Logo" id="winthe">
 
                  <!-- Add the first modal (initially hidden) -->
                 <div id="modal1" class="modal">
@@ -217,7 +247,7 @@
                 <form method="GET" action="{{ route('dice.play') }}">
                   @csrf
                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                      <h1> JACKPOT: </h1>
+                     
                       <div class="jackpot-coins">
                       <img src="{{ asset('img/coins2.png') }}" alt="Coin Icon" height="20px" width="20px" >
                       <span class="jackpot-value">{{ $jackpotCoins }}  </span>
@@ -268,7 +298,10 @@
                             <td>{{ $game->user->name }}</td>
                             <td>{{ $game->bet_amount }}</td>
                             <td>{{ $game->win_chance }}</td>
-                            <td>{{ $game->winAmount }}</td>
+                            
+                            <td>{{ $game->win_amount }}</td>
+                          
+                           
                         </tr>
                     @endforeach
                     <!-- New games will be added here dynamically using JavaScript -->
@@ -407,7 +440,7 @@ document.getElementById("btn2x").addEventListener("click", function(event) {
 document.getElementById("btnMin").addEventListener("click", function(event) {
   event.preventDefault();
   var betAmount = document.getElementById("betAmount");
-  betAmount.value = betAmount.min;
+  betAmount.value = 0.1;
 });
 
 document.getElementById("btnMax").addEventListener("click", function(event) {

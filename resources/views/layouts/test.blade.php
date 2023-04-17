@@ -27,7 +27,8 @@
 
     <style>
        
-body {
+body {  
+
         min-height:calc(100vh);
         background:#3b3b47;
         background:-moz-linear-gradient(top,#202027 0,#202027 19%,#3e3e4a 50%,#202027 80%,#202027 100%);
@@ -39,6 +40,7 @@ body {
 .navbar-dark {
   background-color: #2C2C36;
   color: #ffffff;
+  
 }
 .btn {
   background-color: orange;
@@ -67,6 +69,8 @@ body {
 .navbar {
     font-family: 'Oswald', sans-serif;
   color: #ffffff;
+  border-bottom: 1px solid orange;
+
   
 }
 
@@ -241,9 +245,19 @@ p {
   
 }
 #logo {
-  width: 350px; 
-  
+  width: 125px; 
+  transform: rotate(40deg);
 }
+#logo2 {
+  position: absolute;
+
+  width: 350px; 
+  top: 10px;
+  left: 550px;
+  
+
+}
+
 
 
 </style>
@@ -256,7 +270,9 @@ p {
     <nav class="navbar navbar-expand-sm navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
-                <img src="{{ asset('icons/ethdicelogotr.png') }}" style="margin-left: 200px;"  alt="Cahoot Logo" id="logo">
+            <img src="{{ asset('icons/dice.png') }}" id= "dice1"  alt="Cahoot Logo">
+            <img src="{{ asset('icons/dice.png') }}" id= "dice2"  alt="Cahoot Logo">
+            <img src="{{ asset('icons/ethdice12.png') }}"   alt="Cahoot Logo" id="logo2">
             </a>
            
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -316,6 +332,7 @@ p {
 <div id="content">
      <div id="mains">
       @yield('content')
+      <br><br><br><br><br><br>
 </div>
 </div>
         
@@ -340,6 +357,7 @@ p {
     <div class="community-images">
       <a href="#"><img src="{{ asset('icons/twitter.png') }}" alt="Twitterlogo"></a>
       <a href="#"><img src="{{ asset('icons/telegram.png') }}" alt="Telegramlogo"></a>
+      <br><br><br><br><br><br>
     </div>
   </div>
 </footer>
