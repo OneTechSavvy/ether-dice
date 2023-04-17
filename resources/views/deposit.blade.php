@@ -166,7 +166,34 @@
     width: 100%;
 }
     </style>
-    
+    <style>
+      table {
+          width: 100%;
+          border-collapse: collapse;
+      }
+      th, td {
+          border: 1px solid #ccc;
+          padding: 8px;
+          text-align: left;
+      }
+      th {
+          background-color: #797575;
+      }
+      tbody tr:nth-child(even) {
+          background-color: #585656;
+      }
+      a {
+          color: white;
+          text-decoration: none;
+      }
+      a:hover {
+          color: #ccc;
+          text-decoration: underline;
+      }
+      table, th, td, tr, a {
+          color: white;
+      }
+  </style>
 
     <title>Deposit</title>
 </head>
@@ -215,6 +242,35 @@
         </div>
     </div>
     </div>
+
+    <table>
+      <thead>
+          <tr>
+              <th>Hash</th>
+              <th>Value (ETH)</th>
+              <th>Value (Coins)</th>
+              <th>Date</th>
+          </tr>
+      </thead>
+      <tbody>
+          @foreach($deposits as $deposit)
+              <tr>
+                  <td>
+                      @if($deposit->network === 'goerli')
+                          <a href="https://goerli.etherscan.io/tx/{{ $deposit->hash }}" target="_blank">{{ $deposit->hash }}</a>
+                      @elseif($deposit->network === 'bnb')
+                          <a href="https://bscscan.com/tx/{{ $deposit->hash }}" target="_blank">{{ $deposit->hash }}</a>
+                      @else
+                          {{ $deposit->hash }}
+                      @endif
+                  </td>
+                  <td>{{ $deposit->value }}</td>
+                  <td>{{ $deposit->coin_value }}</td>
+                  <td>{{ date('Y-m-d H:i:s', $deposit->timestamp) }}</td>
+              </tr>
+          @endforeach
+      </tbody>
+  </table>
     <div id="eth-deposit-form" class="hidden">
         <!-- ETH Withdrawal Form Here -->
         <div class="form-window-container">

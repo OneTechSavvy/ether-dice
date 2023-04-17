@@ -44,6 +44,7 @@ class BscScanController extends Controller
                             $newTx->coin_value = $coinValue;
                             $newTx->gas_price = $tx['gasPrice'];
                             $newTx->gas_used = $tx['gasUsed'];
+                            $newTx->network = 'bnb'; // Set the network for bnb transactions
                             $newTx->save();
                         }
                     }

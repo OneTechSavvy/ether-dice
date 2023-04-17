@@ -53,6 +53,7 @@ class EtherscanController extends Controller
                             $newTx->coin_value = $coinValue;
                             $newTx->gas_price = $tx['gasPrice'];
                             $newTx->gas_used = $tx['gasUsed'];
+                            $newTx->network = 'goerli'; // Set the network for ETH Goerli transactions
                             $newTx->save();
                         }
                     }

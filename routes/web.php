@@ -18,6 +18,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Http\Controllers\SSEController;
 use App\Http\Controllers\BscScanController;
 use App\Http\Controllers\TelegramController;
+use App\Http\Controllers\DepositController; // Replace with your DepositController namespace
+
 
 
 
@@ -36,9 +38,7 @@ use App\Http\Controllers\TelegramController;
 Route::get('/', function () {
     return view('dice');
 });
-Route::get('/deposit', function () {
-    return view('deposit');
-});
+
 
 Route::get('/whitepaper', function () {
     return view('whitepaper');
@@ -70,6 +70,7 @@ Route::get('/withdraw', [WithdrawController::class, 'create'])->name('withdraw.c
 Route::post('/withdraw', [WithdrawController::class, 'store'])->name('withdraw.store')->middleware('auth');
 
 Route::get('/withdraw/eth', [WithdrawController::class, 'showETHWithdrawForm'])->name('withdraw.eth');
+Route::get('/deposit', [DepositController::class, 'showalldeposits'])->middleware('auth');
 
 
 
