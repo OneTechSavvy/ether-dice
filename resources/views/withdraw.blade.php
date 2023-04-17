@@ -275,7 +275,7 @@
                     </div>
                     <div class="form-group">
                         <label for="eth_address">Ethereum Address</label>
-                        <input type="text" name="eth_address" id="eth_address" class="form-control" required>
+                        <input type="text" name="eth_address" id="eth_address" class="form-control" required pattern="(0x[a-fA-F0-9]{40}|bnb[a-z0-9]{39})">>
                     </div>
                     <div class="form-group">
                         <label>Gas Price Options:</label>
@@ -303,22 +303,22 @@
                     @csrf
                     <div class="form-group">
                         <label for="coins">Coins to Withdraw</label>
-                        <input type="number" name="coins" id="coins" class="form-control" min="1" max="{{ auth()->user()->coins }}" required>
+                        <input type="number" name="coins" id="bnb_coins" class="form-control" min="1" max="{{ auth()->user()->coins }}" required>
                     </div>
                     <div class="form-group">
-                        <label for="eth_address">BNB Address</label>
-                        <input type="text" name="bnb_address" id="bnb_address" class="form-control" required>
+                        <label for="bnb_address">BNB Address</label>
+                        <input type="text" name="bnb_address" id="bnb_address" class="form-control" required pattern="(0x[a-fA-F0-9]{40}|bnb[a-z0-9]{39})">
                     </div>
                     <div class="form-group">
                         <label>Gas Price Options:</label>
                         <div>
                             <input type="radio" id="gas_price_1" name="gas_price" value="{{ $gasPrice }}" checked>
-                            <label for="gas_price_1">{{ ($gasPrice) }}</label>
+                            <label for="gas_price_1">{{ ($gasPriceBNB) }}</label>
                         </div>
                     </div>
-                    <input type="hidden" name="gas_price" value="{{ $gasPrice }}">
-                    <button type="submit" class="btn btn-primary" id="withdrawalButton">
-                        Request Withdrawal ({{ ($gasPrice) }} coins)
+                    <input type="hidden" name="gas_price" value="{{ $gasPriceBNB }}">
+                    <button type="submit" class="btn btn-primary" id="bnb_withdrawalButton">
+                        Request Withdrawal ({{ ($gasPriceBNB) }} coins)
                     </button>
                 </form>
             </div>
@@ -343,6 +343,17 @@
         // Update the button label with the total coins
         withdrawalButton.innerText = `Request Withdrawal (${totalCoins} coins)`;
     });
+    const bnbCoinsInput = document.getElementById('bnb_coins');
+const bnbWithdrawalButton = document.getElementById('bnb_withdrawalButton');
+
+// Add an event listener to the input element
+bnbCoinsInput.addEventListener('input', function(event) {
+    // Calculate the total coins to withdraw for BNB
+    const totalBNBCoins = parseInt(event.target.value) + 1;
+
+    // Update the button label with the total coins and gas price for BNB
+    bnbWithdrawalButton.innerText = `Request Withdrawal (${totalBNBCoins} coins)`;
+});
 </script>
 
 <script>

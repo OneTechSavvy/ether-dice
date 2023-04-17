@@ -41,10 +41,13 @@ class WithdrawController extends Controller
         // Convert the gas price from USD to coins
         $gasPriceInCoins = round($gasPriceInUsd * 2, 1);
         $gasPrice = $gasPriceInCoins + 2;
-        
-        
-        return view('withdraw', ['gasPrice' => $gasPrice]);
+    
+        // Set gasPriceBNB to 1 coin
+        $gasPriceBNB = 1;
+    
+        return view('withdraw', ['gasPrice' => $gasPrice, 'gasPriceBNB' => $gasPriceBNB]);
     }
+    
 private function getEthToUsdRate($client)
 {
     $response = $client->request('GET', 'simple/price', [
@@ -65,20 +68,23 @@ public function store(Request $request)
     $user = auth()->user();
     $balance = $user->coins;
 
-    // Get the gas price from the request
-    $gasPrice = $request->input('gas_price');
-
+    if ($request->bnb_address) {
+        $gasPrice = $request->input('gas_price_bnb');
+    } else {
+        $gasPrice = $request->input('gas_price');
+    }
+    
     // Validate the request
     $request->validate([
         'coins' => ['required', 'integer', 'min:1', function ($attribute, $value, $fail) use ($balance, $gasPrice) {
-    if ($value + $gasPrice > $balance) {
-        $fail('The ' . $attribute . ' is invalid.');
-    }
-}],
+            if ($value + $gasPrice > $balance) {
+                $fail('The ' . $attribute . ' is invalid.');
+            }
+        }],
         'eth_address' => 'required_without:bnb_address',
         'bnb_address' => 'required_without:eth_address',
     ]);
-
+    
     // Create a new withdrawal record
     $withdrawal = new Withdrawal();
     $withdrawal->user_id = $user->id;
@@ -86,17 +92,21 @@ public function store(Request $request)
     $withdrawal->eth_address = $request->eth_address;
     $withdrawal->bnb_address = $request->bnb_address;
     $withdrawal->save();
-
+    
     try {
         DB::beginTransaction();
-
-        // Deduct the coins from the user's balance
-        $user->coins -= ($request->coins + $gasPrice);
+    
+        // Deduct the coins and gas price from the user's balance
+        if ($request->bnb_address) {
+            $user->coins -= ($request->coins + 1);
+        } else {
+            $user->coins -= ($request->coins + $gasPrice);
+        }
         $user->save();
-
+    
         DB::commit();
-
-        return redirect()->back()->with('success', 'ETH withdrawal request submitted successfully!');
+    
+        return redirect()->back()->with('success', 'Withdrawal request submitted successfully!');
     } catch (\Exception $e) {
         DB::rollback();
         return redirect()->back()->with('error', 'An error occurred while processing your request. Please try again later.');
@@ -108,39 +118,7 @@ public function store(Request $request)
     $withdrawals = Withdrawal::all();
     return view('admin.index', compact('withdrawals'));
 }
-public function withdrawETH(Request $request)
-{
-    $user = auth()->user();
-    $balance = $user->coins;
 
-    $request->validate([
-        'coins' => 'required|integer|min:1|max:' . $balance,
-        'eth_address' => 'required',
-    ]);
-
-
-    $withdrawal = new Withdrawal();
-    $withdrawal->user_id = $user->id;
-    $withdrawal->coins = $request->coins;
-    $withdrawal->eth_address = $request->eth_address;
-    $withdrawal->save();
-
-    try {
-        DB::beginTransaction();
-
-        $withdrawal->save();
-
-        $user->coins -= $request->coins; 
-        $user->save();
-
-        DB::commit();
-
-        return redirect()->back()->with('success', 'ETH withdrawal request submitted successfully!');
-    } catch (\Exception $e) {
-        DB::rollback();
-        return redirect()->back()->with('error', 'An error occurred while processing your request. Please try again later.');
-    }
-}
 
 public function showGas()
 {

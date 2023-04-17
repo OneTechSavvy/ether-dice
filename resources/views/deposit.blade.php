@@ -229,7 +229,9 @@
                   </div>
                   <div class="bg-white px-4 py-8 rounded-md max-w-md w-full mt-8">
                     <h2 class="text-2xl font-semibold mb-4">Crypto converter</h2>
-                    <!-- Add your crypto converter code here -->
+                    <input type="number" id="coin_value" placeholder="Enter coin value">
+                    <div id="eth_value">ETH Value: -</div>
+
                   </div>
                 </div>
               </div>
@@ -301,7 +303,35 @@ function hideBSCdepositForm() {
 }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+
+
 <script>
+const coinValueInput = document.getElementById('coin_value');
+const ethValueDisplay = document.getElementById('eth_value');
+
+coinValueInput.addEventListener('input', function (event) {
+    const coinValue = event.target.value;
+
+    fetch('/convert-coins-to-eth?coin_value=' + coinValue)
+        .then(response => {
+            console.log('Status Code:', response.status); // Log the status code
+            console.log('Response:', response); // Log the response object
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const ethValue = data.eth_value;
+            ethValueDisplay.textContent = 'ETH Value: ' + ethValue.toFixed(4);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+});
+
 
 </script>
+
 @endsection

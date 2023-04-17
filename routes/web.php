@@ -17,7 +17,7 @@ use App\Http\Controllers\MatchBettingController;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Http\Controllers\SSEController;
 use App\Http\Controllers\BscScanController;
-
+use App\Http\Controllers\TelegramController;
 
 
 
@@ -71,10 +71,9 @@ Route::post('/withdraw', [WithdrawController::class, 'store'])->name('withdraw.s
 
 Route::get('/withdraw/eth', [WithdrawController::class, 'showETHWithdrawForm'])->name('withdraw.eth');
 
-Route::get('/bscscan/successful-transactions', [EtherscanController::class, 'getSuccessfulBscTransactions']);
 
 
-
+Route::get('/convert-coins-to-eth', [EtherscanController::class, 'convertCoinsToEth']);
 Route::get('/admin', [WithdrawController::class, 'getAllWithdrawals'])->name('admin');
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -87,6 +86,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     
 Route::get('/dice-games-sse', [SSEController::class, 'diceGamesSSE'])->name('dice.games.sse');
+Route::post('/telegram/send-message', [TelegramController::class, 'sendMessage']);
+
 
 
 
