@@ -20,13 +20,14 @@ class DiceController extends Controller
  public function index()
     {
         $result = null;
-        $winChance = null;
+       $winChance = null;
         $payout = null;
         $randNum = null;
         $winAmount = null;
         $betAmount = null;
         $balance = null;
         $jackpotCoins = null;
+        $randNumValue= null;
     
         if (Auth::check()) {
             $user = auth()->user();
@@ -58,6 +59,8 @@ class DiceController extends Controller
             'jackpotCoins' => $jackpotCoins,
             'biggestWins' => $biggestWins,
             'lastGames' => $lastGames,
+            'randNumValue' => $randNumValue, // Pass the randNum value to the view
+
         ]);
     
     
@@ -82,7 +85,10 @@ public function play(Request $request)
     $randNum = hexdec(substr($combined_seed, 0, 8)) % 100 + 1;
     
         $betAmount = $request->input('betAmount'); // Get bet amount from request, default to 100
-    
+        $randNumValue = $randNum;
+        session(['randNumValue' => $randNum]);
+
+
         // Validate the bet amount to ensure it is within the user's available balance
         if ($betAmount > $balance) {
             $betAmount = $balance;
@@ -103,6 +109,7 @@ public function play(Request $request)
         $isWinner = $randNum <= $winChance; // Check if the random number is less than or equal to the win chance
         $result = $isWinner ? 'win' : 'lose'; // Set the result to "win" or "lose" based on the win chance
     
+        
         if ($winChance == 100) {
             $payout = 5; // Set a fixed payout of 5 for the highest win chance
         } else {
@@ -198,7 +205,7 @@ public function play(Request $request)
             return DiceGame::where('result', 'win')
                 ->where('created_at', '>=', now()->subDay())
                 ->orderBy('win_amount', 'desc')
-                ->take(5)
+                ->take(7)
                 ->get();
         });
     
