@@ -244,20 +244,45 @@ p {
   min-height: 100%;
   
 }
-#logo {
-  width: 125px; 
-  transform: rotate(40deg);
-}
+
 #logo2 {
-  position: absolute;
-
-  width: 350px; 
-  top: 10px;
-  left: 550px;
-  
+  position: relative;
+  left: 50px;
+  width: 8%;
+  height: 8%; 
+  transform: rotate(40deg);
+              transform: rotate(-0.25turn);
 
 }
+#logo3 {
+  position: relative;
+  left: 10px;
+ bottom: 10px;
+ width: 8%;
+  height: 8%; 
+  transform: rotate(20deg);
+              transform: rotate(-0.5turn);
+}
+#logo4 {
+  position: relative;
+  width: 30%;
+  height: 30%; 
+left: 50px;
+ 
 
+}
+#logobottom {
+  position: relative;
+
+  width: 35%;
+  height: 35%; 
+
+  left: 20px;
+
+}
+.dice-container {
+  display: flex;
+}
 
 
 </style>
@@ -270,9 +295,11 @@ p {
     <nav class="navbar navbar-expand-sm navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
-            <img src="{{ asset('icons/dice.png') }}" id= "dice1"  alt="Cahoot Logo">
-            <img src="{{ asset('icons/dice.png') }}" id= "dice2"  alt="Cahoot Logo">
-            <img src="{{ asset('icons/ethdice12.png') }}"   alt="Cahoot Logo" id="logo2">
+            <div class="dice-container">
+            <img src="{{ asset('icons/dice.png') }}"   alt="Cahoot Logo" id="logo2">
+            <img src="{{ asset('icons/dice.png') }}"   alt="Cahoot Logo" id="logo3">
+            <img src="{{ asset('icons/ethdice13.png') }}"   alt="Cahoot Logo" id="logo4">
+          </div>
             </a>
            
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -338,7 +365,10 @@ p {
         
 <footer>
   <div class="footer-left">
-    <img src="{{ asset('icons/ethdicelogobottom.png') }}" alt="Logo">
+  <div class="dice-container">
+          
+            <img src="{{ asset('icons/ethdice13.png') }}"   alt="Cahoot Logo" id="logobottom">
+          </div>
     <p>Copyright© 2022 - 2023 ethdice.com - All rights reserved.
       <br>Contact: support@ethdice.com
     </p>

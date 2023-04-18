@@ -10,21 +10,23 @@
             .styled-table {
               font-family: 'Oswald', sans-serif;
                 position: relative;
-                top: 5px;
-                border-spacing: 0;
+              
                 border-collapse: separate;
+               
+
                 margin: 10px 0;
                 font-size: 0.75em;
+                border-radius: 15px;
+                border-spacing: 0;
                 
                 
-                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-                border-radius: 10px;
                 overflow: hidden;
             }
 
             .styled-table thead tr {
              
               background-color: orange;
+  
                 color: black;
                 text-align: left;
                 font-size: 14px;
@@ -32,18 +34,15 @@
 
             .styled-table th,
             .styled-table td {
-                padding: 4px 11px;
+                padding: 7px 17px;
                 
             }
 
             .styled-table tbody tr {
               border-bottom: 1px solid #dddddd;
-
-              
-               
-                
+ 
             }
-
+        
             .styled-table tbody tr:nth-of-type(even) {
               background-color: black;
             
@@ -56,9 +55,9 @@
             }
 
             .styled-table tbody tr.active-row {
-                font-weight: bold;
+              color: #009879;
               
-                color: #009879;
+                
             }
 
             .popup-button {
@@ -134,35 +133,99 @@
 
             .win-chance-input {
                 font-family: 'Oswald', sans-serif;
+                
             }
          
-            #dice1{
-              width: 100px;
-              position: absolute;
-              bottom: 370px;
-              left: 40px;
-              transform: rotate(70deg);
-              transform: rotate(0.25turn);
-            }
-            #dice2{
-              bottom: 400px;
-              position: absolute;
-              width: 100px;   
-              left: 90px;
-              
-              transform: rotate(40deg);
-              transform: rotate(-0.25turn);
-          }
+        
           #winthe{
             position: absolute;
             width: 300px;
             top: 60px;
             right: 300px;
           }
+  .table-dark thead tr {
+    background-color: orange;
+    font-size: 0.75em;
+    font-family: 'Oswald', sans-serif;
+   
+  
+  }
+
+  /* Set font color for the table headers */
+  .table-dark th {
+    font-family: 'Oswald', sans-serif;
+    color: #fff;
+    color: black;
+    font-size: 16px;
+   
 
 
-        
-            
+   
+  }
+  .high-container {
+  margin: 0;
+  padding: 0;
+}
+  /* Set font color for the table rows */
+  .table-dark td {
+    font-family: 'Oswald', sans-serif;
+    color: #fff;
+   
+
+    
+  }
+
+  /* Add a border to the table */
+  .table-dark {
+    font-family: 'Oswald', sans-serif;
+    width: 100%;
+    
+  }
+
+  /* Add a hover effect to the table rows */
+  .table-dark tbody tr:hover {
+    
+    border: 2px solid black;
+  }
+ h2 {
+  font-family: 'Oswald', sans-serif;
+  margin-bottom: 15px;
+ }
+ .table-responsive {
+  margin: 0;
+  padding: 0;
+}
+#randNumValue {
+  font-family: 'Oswald', sans-serif;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 6em;
+  color: white;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+#mute-button {
+ top: 10px;
+ left: 10px;
+  position: absolute;
+  cursor: pointer;
+  width:35px;
+}
+
+#mute-button img {
+  position: absolute;
+
+  border-radius: 100%;
+  border: solid black 2px;
+}
+
+#mute-button.muted img {
+  content: url("{{ asset('icons/mute.png') }}");
+}
+
+      
    
 </style>
     </head>
@@ -174,13 +237,13 @@
             <div class="game-container">
               <div class="left-container">
                 <!-- Left container content -->
-                <img src="{{ asset('icons/dice.png') }}" id= "dice1"  alt="Cahoot Logo">
-                <img src="{{ asset('icons/dice.png') }}" id= "dice2"  alt="Cahoot Logo">
+               
                 <form class="form-container" method="POST" action="{{ route('dice.play') }}">
                   @csrf
                   <div class="win-chance-input">
-                      <label for="winChanceDisplay">Choose number  </label>
-                      <input type="text" id="winChanceDisplay" readonly style="color: black; border-radius: 10px;" disabled>
+                      <label for="winChanceDisplay">Choose win chance with the slider. Roll within the blue area to win! </label>
+                      <input type="text" id="winChanceDisplay" readonly style="color: black; border-radius: 10px;   text-align: center;
+" disabled>
                         </div>
                   <div class="bet-container">
                     <label for="betAmount">Bet Amount:</label>
@@ -200,14 +263,36 @@
                   <button class="button-69" type="submit">Roll the Dice!</button>
                 </form>
                 <div class="result">
-                  @if(session('winAmount'))
+                @if(session('winAmount'))
                       @if(session('result') == 'win')
-                          You won {{ session('winAmount') }}!  
+                       You rolled {{ session('randNumValue') }} and won {{ session('winAmount')}} coins! 
+                       <audio id="win-sound">
+                          <source src="{{ asset('icons/win.mp3') }}" type="audio/mpeg">
+                     </audio>
+
+                       <script>
+                          const muteButton = document.getElementById('mute-button');
+                          let isMuted = localStorage.getItem('isMuted') === 'true';
+                         var audio = document.getElementById("win-sound");
+                         if (!isMuted) {
+                            audio.play();
+                          }
+                         </script>
                       @else
-                          Sorry, you lost. 
+                          You rolled {{ session('randNumValue') }} and lost.
+                          
                       @endif
                   @endif
-              </div>
+                  </div>
+                  <button id="mute-button">
+  <img src="{{ asset('icons/unmute.png') }}" alt="Unmute">
+</button>
+              
+            
+
+</script>
+
+
               </div>
               <div class="right-container">
                 <!-- Right container content -->
@@ -254,6 +339,7 @@
 
                       </div>
               
+                      <div id="randNumValue">{{ session('randNumValue') }}</div>
 
                     <div class= "mid-div">
                       <input type="range" min="5" max="95" value="{{ session('winChance', $winChance) }}" id="slider" name="winChance" style="width: 600px;">
@@ -264,13 +350,13 @@
                     </div>
                       <div class="win-info">
                           <div class="win-chance" style="display: inline-block;">
-                              <p>Win Chance:<br> </p><span id="win-chance">{{ $winChance }}</span>%
+                              <p>Win Chance:<br> </p><span id="win-chance">{{ $winChance }} </span>%
                           </div>
                           <div class="payout" style="display: inline-block; margin-left: 10px;">
                               <p>Multiplier:<br></p> <span id="payout">{{ $payout }}</span>x
                           </div>
                           <div class="win-amount" style="display: inline-block; margin-left: 10px;">
-                              <p>Win Amount:<br></p> $<span id="win-amount" style="prosent">{{ $winAmount }}</span>
+                              <p>Potential Win:<br></p> <span id="win-amount" style="prosent">{{ $winAmount }}</span>
                           </div>
                       </div>
 
@@ -297,11 +383,8 @@
                         <tr>
                             <td>{{ $game->user->name }}</td>
                             <td>{{ $game->bet_amount }}</td>
-                            <td>{{ $game->win_chance }}</td>
-                            
-                            <td>{{ $game->win_amount }}</td>
-                          
-                           
+                            <td>{{ $game->win_chance }}%</td>
+                            <td>{{ $game->win_amount }}</td>   
                         </tr>
                     @endforeach
                     <!-- New games will be added here dynamically using JavaScript -->
@@ -309,16 +392,17 @@
             </table>
             </div>
           </div>
-          <div class="high-container">
+          <h2>Biggest Wins in the Last 24 Hours | Updates every Hour</h2>
+          
             <!-- High container content -->
-            <h2>Biggest Wins in the Last 24 Hours | Updates every Hour</h2>
+            <div class="high-container">
             <div class="table-responsive">
               <table class="table table-dark table-striped">
                 <thead>
                   <tr>
                     <th scope="col">User</th>
                     <th scope="col">Win Amount</th>
-                    <th scope="col">Timestamp</th>
+                    <th scope="col">Time</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -333,6 +417,7 @@
               </table>
             </div>
           </div>
+ 
       </body>
       <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -374,7 +459,7 @@
         </script>
         
         <script>
-          
+        
             // Get the range input field and the win chance, payout, and win amount elements
             const betAmountInput = document.getElementById('betAmount');
             const slider = document.getElementById('slider');
@@ -489,7 +574,34 @@ function connectSSE() {
 window.addEventListener('DOMContentLoaded', function() {
     setTimeout(connectSSE, 1000);
 });
-        </script>
+
+var randNumValue = document.getElementById('randNumValue');
+
+// Show the randNumValue and set a timeout to fade it out
+randNumValue.style.opacity = 1;
+setTimeout(function() {
+  randNumValue.style.opacity = 0;
+}, 1000); // Change the time (in milliseconds) to adjust how long the value stays on the screen
+document.addEventListener('DOMContentLoaded', () => {
+const muteButton = document.getElementById('mute-button');
+let isMuted = localStorage.getItem('isMuted') === 'true';
+
+if (isMuted) {
+  muteButton.classList.add('muted');
+  muteButton.firstChild.src = '{{ asset('icons/mute.png') }}';
+}
+
+muteButton.addEventListener('click', () => {
+  isMuted = !isMuted;
+  localStorage.setItem('isMuted', isMuted);
+  muteButton.classList.toggle('muted', isMuted);
+  muteButton.firstChild.src = isMuted ? '{{ asset('icons/mute.png') }}' : '{{ asset('icons/unmute.png') }}';
+  
+});
+});
+  </script>
+
+
     @endsection
 
     
