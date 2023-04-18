@@ -7,13 +7,18 @@ use Web3\RequestManagers\HttpRequestManager;
 use Illuminate\Http\Request as AppRequest;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Transaction;
+
 
 class DepositController extends Controller
 {
-    public function showETHdepositform()
-{
-    return view('deposit.eth');
-}
+    public function showalldeposits()
+    {
+        $user = Auth::user();
+        $deposits = Transaction::where('to_address', $user->eth_address)->get();
+        return view('deposit', ['deposits' => $deposits]);
+    }
 
     public function checkForDeposits(AppRequest $request)
     {

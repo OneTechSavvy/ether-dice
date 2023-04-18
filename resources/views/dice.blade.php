@@ -501,37 +501,49 @@ function updateWinAmount() {
 
 // Call updateWinAmount() to initialize win amount based on the initial bet amount
 updateWinAmount();
+
 document.getElementById("btn01").addEventListener("click", function(event) {
   event.preventDefault();
   var betAmount = document.getElementById("betAmount");
   betAmount.value = 0.1;
+  updateWinAmount();
 });
+
 document.getElementById("btn1").addEventListener("click", function(event) {
   event.preventDefault();
   var betAmount = document.getElementById("betAmount");
   betAmount.value = 1;
+  updateWinAmount();
 });
+
 document.getElementById("btn10").addEventListener("click", function(event) {
   event.preventDefault();
   var betAmount = document.getElementById("betAmount");
   betAmount.value = 10;
+  updateWinAmount();
 });
+
 document.getElementById("btn2x").addEventListener("click", function(event) {
   event.preventDefault();
   var betAmount = document.getElementById("betAmount");
   betAmount.value = parseFloat(betAmount.value) * 2;
+  updateWinAmount();
 });
 
 document.getElementById("btnMin").addEventListener("click", function(event) {
   event.preventDefault();
   var betAmount = document.getElementById("betAmount");
-  betAmount.value = 0.1;
+
+  betAmount.value = betAmount.min;
+  updateWinAmount();
+
 });
 
 document.getElementById("btnMax").addEventListener("click", function(event) {
   event.preventDefault();
   var betAmount = document.getElementById("betAmount");
   betAmount.value = betAmount.max;
+  updateWinAmount();
 });
 
 function connectSSE() {

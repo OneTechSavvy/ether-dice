@@ -156,7 +156,34 @@ img:hover {
     width: 500px;
 }  
     </style>
-    
+    <style>
+      table {
+          width: 100%;
+          border-collapse: collapse;
+      }
+      th, td {
+          border: 1px solid #ccc;
+          padding: 8px;
+          text-align: left;
+      }
+      th {
+          background-color: #797575;
+      }
+      tbody tr:nth-child(even) {
+          background-color: #585656;
+      }
+      a {
+          color: white;
+          text-decoration: none;
+      }
+      a:hover {
+          color: #ccc;
+          text-decoration: underline;
+      }
+      table, th, td, tr, a {
+          color: white;
+      }
+  </style>
 
     <title>Deposit</title>
 </head>
@@ -187,6 +214,35 @@ img:hover {
         </div>
     </div>
     </div>
+
+    <table>
+      <thead>
+          <tr>
+              <th>Hash</th>
+              <th>Value (ETH)</th>
+              <th>Value (Coins)</th>
+              <th>Date</th>
+          </tr>
+      </thead>
+      <tbody>
+          @foreach($deposits as $deposit)
+              <tr>
+                  <td>
+                      @if($deposit->network === 'goerli')
+                          <a href="https://goerli.etherscan.io/tx/{{ $deposit->hash }}" target="_blank">{{ $deposit->hash }}</a>
+                      @elseif($deposit->network === 'bnb')
+                          <a href="https://bscscan.com/tx/{{ $deposit->hash }}" target="_blank">{{ $deposit->hash }}</a>
+                      @else
+                          {{ $deposit->hash }}
+                      @endif
+                  </td>
+                  <td>{{ $deposit->value }}</td>
+                  <td>{{ $deposit->coin_value }}</td>
+                  <td>{{ date('Y-m-d H:i:s', $deposit->timestamp) }}</td>
+              </tr>
+          @endforeach
+      </tbody>
+  </table>
     <div id="eth-deposit-form" class="hidden">
         <!-- ETH Withdrawal Form Here -->
         <div class="form-window-container">
@@ -201,7 +257,9 @@ img:hover {
                   </div>
                   <div class="bg-white px-4 py-8 rounded-md max-w-md w-full mt-8">
                     <h2 class="text-2xl font-semibold mb-4">Crypto converter</h2>
-                    <!-- Add your crypto converter code here -->
+                    <input type="number" id="coin_value" placeholder="Enter coin value">
+                    <div id="eth_value">ETH Value: -</div>
+
                   </div>
                 </div>
               </div>
@@ -274,7 +332,35 @@ function hideBSCdepositForm() {
 }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+
+
 <script>
+const coinValueInput = document.getElementById('coin_value');
+const ethValueDisplay = document.getElementById('eth_value');
+
+coinValueInput.addEventListener('input', function (event) {
+    const coinValue = event.target.value;
+
+    fetch('/convert-coins-to-eth?coin_value=' + coinValue)
+        .then(response => {
+            console.log('Status Code:', response.status); // Log the status code
+            console.log('Response:', response); // Log the response object
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const ethValue = data.eth_value;
+            ethValueDisplay.textContent = 'ETH Value: ' + ethValue.toFixed(4);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+});
+
 
 </script>
+
 @endsection
