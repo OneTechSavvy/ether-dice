@@ -33,23 +33,28 @@
     border-color: currentColor;
 }
 .card {
+  margin-top: 15px;
   width: 195px;
   height: 200px;
   margin-right: 20px;
-  background: #313131;
+  background: white;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   color: white;
-  transition: 0.2s ease-in-out;
+  border-radius: 100px;
 }
 
 .img {
-  height: 45%;
+  height: 100%;
+  width: 100%;
   position: absolute;
-  transition: 0.2s ease-in-out;
   z-index: 1;
+}
+img:hover {
+  opacity: 0.8;
+  cursor: pointer;
 }
 
 .textBox {
@@ -62,6 +67,7 @@
   transition: 0.2s ease-in-out;
   z-index: 2;
 }
+
 
 .textBox > .text {
   font-weight: bold;
@@ -80,36 +86,20 @@
   color: lightgrey;
 }
 
-.card:hover > .textBox {
-  opacity: 1;
+
+h4{
+    color: white;
+    font-weight: bold;
+    font-family: 'Oswald', sans-serif;
+    position: absolute;
+    bottom: 380px;
 }
 
-.card:hover > .img {
-  height: 65%;
-  animation: anim 2s infinite;
-}
 
-@keyframes anim {
-  0% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-.card:hover {
-  transform: scale(1.04) rotate(-1deg);
-}
 
 
        
-        .hidden {
+.hidden {
     display: none;
 }
 .form-window-container {
@@ -117,7 +107,7 @@
     width: 80%;
     max-width: 600px;
     height: 400px;
-    border: 2px solid #5c5c5c;
+    border: 2px solid orange;
     background-color: #5c5c5c;
     border-radius: 10px;
     margin: auto;
@@ -126,15 +116,17 @@
 }
 
 .back-button {
+    font-family: 'Oswald', sans-serif;
     position: absolute;
     top: 10px;
     left: 10px;
-    padding: 8px;
+    padding: 10px;
     font-size: 1.2rem;
     border: none;
-    background-color: #f2f2f2;
-    color: #555;
+    background-color: black;
+    color: white;
     cursor: pointer;
+    border-radius: 5px;
 }
 
 .form-window-content {
@@ -160,89 +152,76 @@
     width: 80%;
     max-width: 400px;
 }
-
 .form-window-content form button[type="submit"] {
     margin-top: 30px;
     width: 100%;
 }
+
+#withd{
+    position: relative;
+    right: 110px;
+}  
+.form-group{
+    color: white;
+    font-family: 'Oswald', sans-serif;
+}
+ h4 {
+    top: 5px;
+ }
     </style>
-    
+
 
     <title>Withdraw</title>
 </head>
 <body>
     <div class="main-container">   
     <div class="custom-container mt-5">
-        <h2>Withdraw Options</h2>
+    <img src="{{ asset('icons/withdrawal.png') }}" id= "withd"  alt="Cahoot Logo">
         <div class="row mb-5">
-            <div class="col-md-12">
-                <h3>VISA</h3>
-                <div class="d-flex justify-content-around">
-                    <div class="card" onclick="location.href='/withdraw/csgo'">
-                        <img src="/img/VISA.png" class="img" alt="VISA" width="100" height="100">
-                        <div class="card-body">
-                            <span>VISA</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
         <div class="row">
             <div class="col-md-12">
-                <h3>Cryptocurrency</h3>
+               
                 <div class="row row-cols-3 g-4">
                     <!-- Add more cryptocurrencies in the same format -->
                     <div class="d-flex justify-content-around">
                         <div class="card" onclick="showBSCWithdrawForm()">
-                            <img src="{{ asset('icons/BNB.png') }}" class="img" alt="BNB" width="100" height="100">
-                            <div class="card-body">
-                                <div class="textbox">
-                                    <span>BNB</span>
-                                </div>
-
-                            </div>
+                            <img src="{{ asset('icons/bnblogo.png') }}" class="img" alt="BNB" >
+                            
                         </div>
                     </div>
                     <div class="d-flex justify-content-around">
                         <div class="card" onclick="showETHWithdrawForm()">
-                            <img src="{{ asset('icons/eth.png') }}" class="img" alt="Ethereum" width="100" height="100">
-                            <div class="card-body">
-                                <div class="textbox">
-                                    <span>Ethereum</span>
-                                </div>
-                            </div>
+                            <img src="{{ asset('icons/ethereumlogo.png') }}" class="img" alt="Ethereum">
+                           
+                            
                         </div>
+                        
                     </div>
-                    <div class="d-flex justify-content-around">
-                        <div class="card" onclick="location.href='/withdraw/ltc'">
-                            <img src="{{ asset('icons/usdt.png') }}" class="img" alt="USDT" width="100" height="100">
-                            <div class="card-body">
-                                <div class="textbox">
-                                    <span>USDT</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                   
                 </div>
             </div>
         </div>
     </div>
     </div>
+    <p style="font-family: 'Oswald', sans-serif; color: white; text-align: center; position: absolute; top: 700px; left: 500px;">We recommend withdrawing using Binance Coin as the gas fees are way lower.<br> Withdrawals will be checked manually during the beta launch but we expect to handle them very quickly and 100% within 24 hours.<br> Please contact us in <a href="https://telegram.me/ethdiceofficial" style="text-decoration: underline;">telegram</a> and we will handle the withdrawal request immediately </p>
+
     <div id="eth-withdraw-form" class="hidden">
         <!-- ETH Withdrawal Form Here -->
         <div class="form-window-container">
             <button class="back-button" onclick="hideETHWithdrawForm()">Back</button>
             <div class="form-window-content">
-                <h3>Withdraw Ethereum</h3>
-                <p>Please enter the Ethereum wallet</p>
+                <h4>Withdraw Ethereum</h4>
+                
                 <form action="{{ route('withdraw.store') }}" method="POST">
                     @csrf
                     <div class="form-group">
-                        <label for="coins">Coins to Withdraw</label>
+                        <label for="coins">Coins to Withdraw:</label>
                         <input type="number" name="coins" id="coins" class="form-control" min="1" max="{{ auth()->user()->coins }}" required>
                     </div>
                     <div class="form-group">
-                        <label for="eth_address">Ethereum Address</label>
+                        <label for="eth_address">Your Ethereum Address:</label>
                         <input type="text" name="eth_address" id="eth_address" class="form-control" required>
                     </div>
                     <div class="form-group">
@@ -266,21 +245,22 @@
             <button class="back-button" onclick="hideETHWithdrawForm()">Back</button>
             <div class="form-window-content">
                 <h3>Withdraw Ethereum</h3>
-                <p>Please enter the Ethereum wallet</p>
+                
                 <form action="{{ route('withdraw.store') }}" method="POST">
                     @csrf
                     <div class="form-group">
-                        <label for="coins">Coins to Withdraw</label>
+                        <label for="coins">Coins to Withdraw:</label>
                         <input type="number" name="coins" id="coins" class="form-control" min="1" max="{{ auth()->user()->coins }}" required>
                     </div>
                     <div class="form-group">
+
                         <label for="eth_address">Ethereum Address</label>
-                        <input type="text" name="eth_address" id="eth_address" class="form-control" required>
+                        <input type="text" name="eth_address" id="eth_address" class="form-control" required pattern="(0x[a-fA-F0-9]{40}|bnb[a-z0-9]{39})">>
                     </div>
                     <div class="form-group">
-                        <label>Gas Price Options:</label>
+                        <label>Gas Price:</label>
                         <div>
-                            <input type="radio" id="gas_price_1" name="gas_price" value="{{ $gasPrice }}" checked>
+                        <input type="radio" id="gas_price_1" name="gas_price" value="{{ $gasPrice }}" checked>
                             <label for="gas_price_1">{{ ($gasPrice) }}</label>
                         </div>
                     </div>
@@ -297,28 +277,29 @@
         <div class="form-window-container">
             <button class="back-button" onclick="hideBSCWithdrawForm()">Back</button>
             <div class="form-window-content">
-                <h3>Withdraw BNB</h3>
-                <p>Please enter the BNB wallet</p>
+                <h4>Withdraw BNB</h4>
+                
                 <form action="{{ route('withdraw.store') }}" method="POST">
                     @csrf
                     <div class="form-group">
+
                         <label for="coins">Coins to Withdraw</label>
-                        <input type="number" name="coins" id="coins" class="form-control" min="1" max="{{ auth()->user()->coins }}" required>
+                        <input type="number" name="coins" id="bnb_coins" class="form-control" min="1" max="{{ auth()->user()->coins }}" required>
                     </div>
                     <div class="form-group">
-                        <label for="eth_address">BNB Address</label>
-                        <input type="text" name="bnb_address" id="bnb_address" class="form-control" required>
+                        <label for="bnb_address">BNB Address</label>
+                        <input type="text" name="bnb_address" id="bnb_address" class="form-control" required pattern="(0x[a-fA-F0-9]{40}|bnb[a-z0-9]{39})">
                     </div>
                     <div class="form-group">
-                        <label>Gas Price Options:</label>
+                        <label>Gas Price:</label>
                         <div>
                             <input type="radio" id="gas_price_1" name="gas_price" value="{{ $gasPrice }}" checked>
-                            <label for="gas_price_1">{{ ($gasPrice) }}</label>
+                            <label for="gas_price_1">{{ ($gasPriceBNB) }}</label>
                         </div>
                     </div>
-                    <input type="hidden" name="gas_price" value="{{ $gasPrice }}">
-                    <button type="submit" class="btn btn-primary" id="withdrawalButton">
-                        Request Withdrawal ({{ ($gasPrice) }} coins)
+                    <input type="hidden" name="gas_price" value="{{ $gasPriceBNB }}">
+                    <button type="submit" class="btn btn-primary" id="bnb_withdrawalButton">
+                        Request Withdrawal ({{ ($gasPriceBNB) }} coins)
                     </button>
                 </form>
             </div>
@@ -343,6 +324,17 @@
         // Update the button label with the total coins
         withdrawalButton.innerText = `Request Withdrawal (${totalCoins} coins)`;
     });
+    const bnbCoinsInput = document.getElementById('bnb_coins');
+const bnbWithdrawalButton = document.getElementById('bnb_withdrawalButton');
+
+// Add an event listener to the input element
+bnbCoinsInput.addEventListener('input', function(event) {
+    // Calculate the total coins to withdraw for BNB
+    const totalBNBCoins = parseInt(event.target.value) + 1;
+
+    // Update the button label with the total coins and gas price for BNB
+    bnbWithdrawalButton.innerText = `Request Withdrawal (${totalBNBCoins} coins)`;
+});
 </script>
 
 <script>

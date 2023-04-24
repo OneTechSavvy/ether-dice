@@ -28,14 +28,14 @@
   height: 500px;
   border: 0px solid #ccc;
   overflow: hidden;
-  border-radius: 30px;
+  border-radius: 10px;
 background: #2f2f39;
 box-shadow:  8px 8px 16px #131317,
              -8px -8px 16px #4b4b5b;
 }
 
 .left-container {
-  display: flex;
+  position: relative;
   background-color: rgba(0,0,0,0.25);
   flex-direction: column;
   justify-content: center;
@@ -43,7 +43,7 @@ box-shadow:  8px 8px 16px #131317,
   border-radius: 10px;
   border: 2px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0px 0px 10px 0px rgba(255, 255, 255, 0.2);
-  padding: 20px;
+  padding: 30px;
 }
 
 .right-container {
@@ -67,23 +67,15 @@ box-shadow:  8px 8px 16px #131317,
   font-size: 30px;
   border-radius: 2px;
   padding: 3px 6px;
-  color:orange;
+  color:rgba(218, 133, 35, 0.904);
   border-radius: 5px;
   padding: 5px;
   align-items: center;
   justify-content: center;
   bottom: 392px;
-  left: 140px;
+  left: 340px;
 }
-h1{
-  font-family: 'Oswald', sans-serif;
-  color: orange;
-  position: absolute;
-  bottom: 400px;
-  left: 15px;
-  width: 170px;
-  font-size: 30px;
-}
+
 
 .jackpot-coins img {
   vertical-align: middle;
@@ -94,28 +86,28 @@ h1{
 }
 .live-container {
   display: flex;
-  background-color: rgba(0,0,0,0.15);
+ 
   flex-direction: column;
   width: 300px;
   height: 500px;
   justify-content: center;
-  align-items: center;
-  border-radius: 30px;
+  
+  border-radius: 10px;
 background: #2f2f39;
 box-shadow:  -8px 8px 16px #131317,
              8px -8px 16px #4b4b5b;
-  padding: 20px;
-  margin-left: 15px;
+ 
+             margin-left: 10px;
 }
 .high-container {
-  display: flex;
+  display: relative;
   background-color: rgba(0,0,0,0.20);
-  flex-direction: column;
+  
   justify-content: center;
   align-items: center;
   border-radius: 10px;
   height: 400px;
-  border-radius: 30px;
+ 
 background: #2f2f39;
 box-shadow:  6px -6px 12px #131317,
              -6px 6px 12px #4b4b5b;
@@ -137,6 +129,7 @@ box-shadow:  6px -6px 12px #131317,
   
   width: 80%;
   margin: 20px 0;
+ 
 }
 
 .win-info {
@@ -169,9 +162,13 @@ box-shadow:  6px -6px 12px #131317,
 }
 
 .result {
-  margin-top: 20px;
-  font-size: 24px;
-  font-weight: bold;
+  position: absolute;
+  top: 400px;
+  font-size: 20px;
+  font-family: 'Oswald', sans-serif;
+  text-align: center;
+
+
 }
 
 .win {
@@ -202,7 +199,7 @@ input[type="number"] {
   background-image: none;
   border-style: none;
   box-sizing: border-box;
-  color: #fff;
+  color: black;
   cursor: pointer;
   display: inline-block;
   flex-direction: row;
@@ -243,7 +240,7 @@ input[type="number"] {
 }
 
 .button-69:before {
-  background-color: rgba(249, 58, 19, .32);
+  background-color: orange;
   content: "";
   display: block;
   height: 100%;
@@ -303,6 +300,8 @@ input[type="number"] {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin-top: 20px;
+  margin-bottom: 15px;
 }
 
 .bet-input-modifiers {
@@ -367,12 +366,13 @@ input[type=number] {
 #winChanceDisplay{
   font-family: 'Oswald', sans-serif;
   background: linear-gradient(21deg, #4c4d4e, #f3f3f3);	
-  padding-left:27px;
+
   color: white;
 
 }
  
 #button2, #button1{
   border: 1px solid orange;
+  background-color: #131317;
 
 }
