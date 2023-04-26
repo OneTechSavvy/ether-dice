@@ -79,6 +79,7 @@ Route::get('/admin', [WithdrawController::class, 'getAllWithdrawals'])->name('ad
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admindice', [\App\Http\Controllers\AdminController::class, 'admindice'])->name('admin.dice');
     Route::get('/bscscan/successful-transactions', [BscScanController::class, 'getSuccessfulTransactions']);
     Route::get('/etherscan/successful-transactions', [EtherscanController::class, 'getSuccessfulTransactions']);
     Route::put('/withdrawals/{id}/approve', [AdminController::class, 'approveWithdrawal'])->name('withdrawals.approve');

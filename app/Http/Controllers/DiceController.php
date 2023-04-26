@@ -101,8 +101,8 @@ public function play(Request $request)
         // Validate the win chance to ensure it is within the valid range
         if ($winChance < 5) {
             $winChance = 5;
-        } elseif ($winChance > 95) {
-            $winChance = 95;
+        } elseif ($winChance > 90) {
+            $winChance = 90;
         }
     
     
