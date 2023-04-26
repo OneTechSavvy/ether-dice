@@ -67,13 +67,12 @@ box-shadow:  8px 8px 16px #131317,
   font-size: 30px;
   border-radius: 2px;
   padding: 3px 6px;
-  color:rgba(218, 133, 35, 0.904);
+  color: white;
   border-radius: 5px;
   padding: 5px;
   align-items: center;
   justify-content: center;
-  bottom: 392px;
-  left: 340px;
+  top: 10%;
 }
 
 

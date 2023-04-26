@@ -6,6 +6,7 @@
     <head>
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
       <link rel="stylesheet" href="{{ asset('css/dice.css') }}">
+
         <style>
             .styled-table {
               font-family: 'Oswald', sans-serif;
@@ -137,12 +138,7 @@
             }
          
         
-          #winthe{
-            position: absolute;
-            width: 300px;
-            top: 60px;
-            right: 300px;
-          }
+    
   .table-dark thead tr {
     background-color: orange;
     font-size: 0.75em;
@@ -298,7 +294,7 @@
                   <button id="button1"style="margin-left: 2px;" class="popup-button">Jackpot</button>
                   <button id="button2" style="margin-left: 65px;" class="popup-button">Fairness</button>
               </div>
-              <img src="{{ asset('icons/winthejackpot.png') }}" alt="Cahoot Logo" id="winthe">
+           
 
                  <!-- Add the first modal (initially hidden) -->
                 <div id="modal1" class="modal">
@@ -332,6 +328,7 @@
                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
                      
                       <div class="jackpot-coins">
+                      JACKPOT &nbsp;
                       <img src="{{ asset('img/coins2.png') }}" alt="Coin Icon" height="20px" width="20px" >
                       <span class="jackpot-value">{{ $jackpotCoins }}  </span>
 
