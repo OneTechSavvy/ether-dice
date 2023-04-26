@@ -288,9 +288,7 @@
   <img src="{{ asset('icons/unmute.png') }}" alt="Unmute">
 </button>
               
-            
-
-</script>
+        
 
 
               </div>
@@ -342,7 +340,7 @@
                       <div id="randNumValue">{{ session('randNumValue') }}</div>
 
                     <div class= "mid-div">
-                      <input type="range" min="5" max="95" value="{{ session('winChance', $winChance) }}" id="slider" name="winChance" style="width: 600px;">
+                      <input type="range" min="5" max="90" value="{{ session('winChance', $winChance) }}" id="slider" name="winChance" style="width: 600px;">
                       <div id="selector">
                           <div class="selectBtn"></div>
                           <div id="selectValue"></div>
