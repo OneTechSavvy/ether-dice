@@ -34,8 +34,8 @@
 }
 .card {
   margin-top: 15px;
-  width: 195px;
-  height: 200px;
+  width: 200px;
+  height: 160px;
   margin-right: 20px;
   background: white;
   display: flex;
@@ -160,6 +160,7 @@ h4{
 #withd{
     position: relative;
     right: 110px;
+    
 }  
 .form-group{
     color: white;
