@@ -19,6 +19,7 @@ use App\Http\Controllers\SSEController;
 use App\Http\Controllers\BscScanController;
 use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\DepositController; // Replace with your DepositController namespace
+use App\Http\Controllers\StripeController;
 
 
 
@@ -72,12 +73,17 @@ Route::post('/withdraw', [WithdrawController::class, 'store'])->name('withdraw.s
 Route::get('/withdraw/eth', [WithdrawController::class, 'showETHWithdrawForm'])->name('withdraw.eth');
 Route::get('/deposit', [DepositController::class, 'showalldeposits'])->middleware('auth');
 
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::post('/deposit/stripe', [StripeController::class, 'createCheckoutSession'])->name('deposit.stripe');
+    Route::get('/deposit/success', [StripeController::class, 'depositSuccess'])->name('deposit.success');
+    Route::get('/deposit/cancel', [StripeController::class, 'depositCancel'])->name('deposit.cancel');
+});
 
 
 Route::get('/convert-coins-to-eth', [EtherscanController::class, 'convertCoinsToEth']);
 Route::get('/admin', [WithdrawController::class, 'getAllWithdrawals'])->name('admin');
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
     Route::get('/admindice', [\App\Http\Controllers\AdminController::class, 'admindice'])->name('admin.dice');
     Route::get('/bscscan/successful-transactions', [BscScanController::class, 'getSuccessfulTransactions']);
