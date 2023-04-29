@@ -19,6 +19,7 @@ class Transaction extends Model
         'gas_price',
         'gas_used',
         'coin_value',
+        'network'
     ];
     
 }

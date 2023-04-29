@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Transaction;
 use Stripe\Checkout\Session;
 
 class StripeController extends Controller
 {
     public function createCheckoutSession(Request $request)
     {
+            // Make sure the user is authenticated
+          $user = auth()->user();
         // Set your Stripe API keys
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
@@ -42,7 +45,7 @@ class StripeController extends Controller
                 'quantity' => 1,
             ]],
             'mode' => 'payment',
-            'success_url' => route('deposit.success'),
+            'success_url' => route('deposit.success', ['amount' => $request->input('amount')]),
             'cancel_url' => route('deposit.cancel'),
         ]);
 
@@ -54,21 +57,37 @@ class StripeController extends Controller
 
     public function depositSuccess(Request $request)
     {
-        // Get the user who made the deposit
         $user = auth()->user();
-    
+
         // Get the amount deposited
         $amount = $request->query('amount');
-    
+        
         // Convert the amount to coins based on the USD to coin rate
         $coins = $amount * 2;
-    
+        
         // Update the user's coin balance
         $user->coins += $coins;
         $user->save();
+        
+        // Create a new transaction record
+        $transaction = new Transaction([
+            'hash' => uniqid(), // Use a unique ID as the transaction hash
+            'block_number' => 1,
+            'timestamp' => time(),
+            'from_address' => 'stripe', // set it to a default value
+            'to_address' => $user->eth_address,
+            'value' => $amount,
+            'gas_price' => 2,
+            'gas_used' => 2,
+            'coin_value' => $coins,
+            'network' => 'stripe',
+        ]);
+        
+        // Save the transaction record
+        $transaction->save();
+        
+        return redirect()->route('home');
     
-        // Redirect to a success page or show a success message
-        return redirect()->route('home')->with('success', 'Deposit successful. ' . $coins . ' coins have been added to your balance.');
     }
 
     public function depositCancel()
