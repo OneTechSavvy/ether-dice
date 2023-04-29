@@ -208,6 +208,12 @@ img:hover {
                             
                         </div>
                     </div>
+                    <div class="d-flex justify-content-around">
+                        <div class="card" onclick="showSTRIPEdepositForm()">
+                            <img src="{{ asset('icons/stripe.png') }}" class="img" alt="Stripe" >
+                            
+                        </div>
+                    </div>
                     
                 </div>
             </div>
@@ -289,6 +295,32 @@ img:hover {
           </div>
       </div>
   </div>
+  <div id="stripe-deposit-form" class="hidden">
+    <div class="form-window-container">
+        <button class="back-button" onclick="hideStripeDepositForm()">Back</button>
+        <div class="form-window-content">
+            <div class="bg-gray-100 px-4 py-8 rounded-md max-w-md w-full">
+                <h2 class="text-2xl font-semibold mb-4">Deposit</h2>
+                <div class="bg-white px-4 py-8 rounded-md max-w-md w-full mt-8">
+                    <form id="stripe-payment-form" action="{{ route('deposit.stripe') }}" method="POST">
+                        @csrf
+                        <div class="mb-4">
+                            <label for="amount" class="block text-gray-700 font-bold mb-2">Deposit amount:</label>
+                            <input type="number" id="amount" name="amount" placeholder="Enter deposit amount in dollars" required>
+                        </div>
+                        <div id="card-element" class="mb-4">
+                            <!-- Stripe Elements Placeholder -->
+                        </div>
+                        <div id="card-errors" role="alert" class="text-red-500 mb-4"></div>
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Submit Payment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
   <p style="font-family: 'Oswald', sans-serif; color: white; text-align: center; position: absolute; top: 700px; left: 650px;">We recommend depositing using Binance Coin as the gas fees are way lower.<br>Deposits will be credited automatically within 5 minutes.<br> Please contact us in <a href="https://telegram.me/ethdiceofficial" style="text-decoration: underline;">telegram</a> if you have any issues! </p>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -325,6 +357,22 @@ function showBSCdepositForm() {
 function hideBSCdepositForm() {
     // Hide the ETH withdrawal form
     document.querySelector('#eth-deposit-form').classList.add('hidden');
+    // Remove the "hidden" class from the cryptocurrency card grid
+    document.querySelector('.row-cols-3').classList.remove('hidden');
+    // Display the main container
+    document.querySelector('.main-container').classList.remove('hidden');
+}
+function showSTRIPEdepositForm() {
+    // Hide the main container
+    document.querySelector('.main-container').classList.add('hidden');
+    // Remove the cryptocurrency card grid
+    document.querySelector('.row-cols-3').classList.add('hidden');
+    // Display the Stripe deposit form
+    document.querySelector('#stripe-deposit-form').classList.remove('hidden');
+}
+function hideSTRIPEdepositForm() {
+    // Hide the Stripe deposit form
+    document.querySelector('#stripe-deposit-form').classList.add('hidden');
     // Remove the "hidden" class from the cryptocurrency card grid
     document.querySelector('.row-cols-3').classList.remove('hidden');
     // Display the main container
