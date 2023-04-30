@@ -131,67 +131,33 @@
 
         <section>
             <div class="board">
-                <table width="100%">
-                    <thead>
+                <h2>Update Max Bet</h2>
+                <form method="POST" action="{{ route('house.updateMaxBet') }}">
+                    @csrf
+                    @method('PUT')
+                    <table width="100%">
                         <tr>
-                            <td>Name</td>
-                            <td>Type</td>
-                            <td>Status</td>
-                            <td>Coins</td>
-                            <td></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($withdrawals as $withdrawal)
-                        <tr id="withdrawal-{{ $withdrawal->id }}">
-                            <td class="people">
-                                <div class="people-de">
-                                    <h5>{{ $withdrawal->user->name }}</h5>
-                                    <p>{{ $withdrawal->user->email }}</p>
-                                </div>
-                            </td>
-                            <td class="people-desig">
-                                <h5>{{ $withdrawal->eth_address ? 'ETH' : 'BNB' }}</h5>
-                                <p>{{ $withdrawal->eth_address ?? $withdrawal->bnb_address }}</p>
-                            </td>
-                            <td class="status">
-                                <p>{{ $withdrawal->status }}</p>
-                            </td>
-                            <td class="coins">
-                                <p>{{ $withdrawal->coins }}</p>
+                            <td>
+                                <label for="max_bet">Max Bet:</label>
                             </td>
                             <td>
-                                <form method="POST" action="{{ route('withdrawals.approve', $withdrawal->id) }}">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit" class="button confirm" onclick="hideWithdrawalRow({{ $withdrawal->id }})">Confrim</button>
+                                <input type="number" id="max_bet" name="max_bet" value="{{ $maxBet }}" required>
 
-                                </form>
-                                <form method="POST" action="{{ route('withdrawals.reject', $withdrawal->id) }}">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit" class="button reject" >Rejected </button>
-                                </form>
-                               
+                            </td>
+                            <td>
+                                <button type="submit" class="button confirm">Update</button>
                             </td>
                         </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                    </table>
+                </form>
             </div>
         </section>
-
-
-    <script>
-        $('#menu-btn').click(function() {
-            $('#menu').toggleClass("active");
-        })
-    </script>
-    <script>
-        function hideWithdrawalRow(withdrawalId) {
-            document.getElementById('withdrawal-' + withdrawalId).style.display = 'none';
-        }
-    </script>
+        
+        <script>
+            $('#menu-btn').click(function() {
+                $('#menu').toggleClass("active");
+            })
+        </script>
     
 
 </body>
