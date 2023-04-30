@@ -20,10 +20,15 @@ class Kernel extends ConsoleKernel
         $schedule->command('fetch:successful-transactions')
         ->everyFiveMinutes();
 
-    $schedule->command('fetch:successful-bsc-transactions')
+        $schedule->command('fetch:successful-bsc-transactions')
         ->everyFiveMinutes();
 
     }
+    protected $routeMiddleware = [
+        // ...
+        'is_admin' => \App\Http\Middleware\IsAdmin::class,
+        // ...
+    ];
     
     /**
      * Register the commands for the application.
