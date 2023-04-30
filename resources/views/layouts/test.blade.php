@@ -286,7 +286,16 @@ left: 50px;
 
 
 </style>
-        
+   
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-868DP62C77"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-868DP62C77');
+</script>
+     
 </head>
 <body>
 
@@ -404,6 +413,4 @@ left: 50px;
 
 
 
-
-</body>
 </html>

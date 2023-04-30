@@ -186,6 +186,16 @@ img:hover {
   </style>
 
     <title>Deposit</title>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-868DP62C77"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-868DP62C77');
+</script>
+
 </head>
 <body>
     <div class="main-container">   
