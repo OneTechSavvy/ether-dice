@@ -249,7 +249,7 @@
                     <label for="betAmount">Bet Amount:</label>
                     <input type="hidden" name="winChance" id="winChanceInput" value="{{ $winChance }}" style="border-radius: 6px; width: 20px;">
                     <div class="bet-input-modifiers">
-                      <input type="number" id="betAmount" placeholder="0.00" name="betAmount" min="1" max="{{ $balance }}" value="{{ session('betAmount', $betAmount) }}" required>
+                      <input type="number" id="betAmount" placeholder="0.00" name="betAmount" min="1" max="{{ min($balance, $max_bet) }}" value="{{ session('betAmount', $betAmount) }}" required>
                       <div class="bet-modifiers">
                         <button id="btn01" class="modifier-button">0.1</button>
                         <button id="btn1" class="modifier-button">1</button>
@@ -257,6 +257,7 @@
                         <button id="btn2x" class="modifier-button">2x</button>
                         <button id="btnMin" class="modifier-button">Min</button>
                         <button id="btnMax" class="modifier-button">Max</button>
+                        
                       </div>
                     </div>
                   </div>
@@ -564,7 +565,7 @@ function connectSSE() {
             row.insertCell().innerHTML = game.user_name;
             row.insertCell().innerHTML = game.bet_amount;
             row.insertCell().innerHTML = game.win_chance;
-            row.insertCell().innerHTML = game.payout;
+            row.insertCell().innerHTML = game.win_amount;
         };
 
         source.onerror = function(error) {

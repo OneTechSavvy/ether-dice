@@ -9,7 +9,6 @@ class House extends Model
 {
     use HasFactory;
     
-    protected $fillable = [
-        'name', 'coins'
-    ];
+    protected $fillable = ['name', 'coins', 'max_bet'];
+    
 }

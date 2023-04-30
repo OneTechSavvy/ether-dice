@@ -37,6 +37,8 @@ class DiceController extends Controller
         }
         $jackpot = House::where('name', 'DiceJackpot')->first();
         $jackpotCoins = $jackpot ? $jackpot->coins : 0;
+        $house = House::where('name', 'DiceHouse')->first(); // Get the DiceHouse user from the House table
+        $maxBet = $house->max_bet;
         
         $biggestWins = Cache::remember('biggest_wins', 3600, function () {
             return DiceGame::where('result', 'win')
@@ -60,6 +62,7 @@ class DiceController extends Controller
             'biggestWins' => $biggestWins,
             'lastGames' => $lastGames,
             'randNumValue' => $randNumValue, // Pass the randNum value to the view
+            'max_bet' => $maxBet, 
 
         ]);
     
@@ -72,11 +75,18 @@ public function play(Request $request)
     $user = auth()->user();
     $balance = $user->coins;
     
+    $house = House::where('name', 'DiceHouse')->first(); 
+    $maxBet = $house->max_bet;
+    
     // Generate a random server seed
     $server_seed = Str::random(32);
     
     // Generate a random client seed
     $client_seed = Str::random(32);
+
+    $validatedData = $request->validate([
+        'betAmount' => ['required', 'numeric', 'min:1', 'max:' . $maxBet],
+    ]);
     
     // Combine the server and client seeds to create a unique seed for the game
     $combined_seed = hash('sha256', $server_seed . $client_seed);
@@ -84,7 +94,7 @@ public function play(Request $request)
     // Generate the random number using the combined seed
     $randNum = hexdec(substr($combined_seed, 0, 8)) % 100 + 1;
     
-        $betAmount = $request->input('betAmount'); // Get bet amount from request, default to 100
+         $betAmount = $validatedData['betAmount']; // Get bet amount from request, default to 100
         $randNumValue = $randNum;
         session(['randNumValue' => $randNum]);
 
@@ -92,6 +102,8 @@ public function play(Request $request)
         // Validate the bet amount to ensure it is within the user's available balance
         if ($betAmount > $balance) {
             $betAmount = $balance;
+        } elseif ($betAmount > $maxBet) {
+            $betAmount = $maxBet;
         } elseif ($betAmount < 1) {
             $betAmount = 1;
         }
@@ -99,10 +111,10 @@ public function play(Request $request)
         $winChance = $request->input('winChance', 50); // Get win chance from request, default to 50
     
         // Validate the win chance to ensure it is within the valid range
-        if ($winChance < 5) {
-            $winChance = 5;
-        } elseif ($winChance > 90) {
-            $winChance = 90;
+        if ($betAmount > $balance || $betAmount > $maxBet) {
+            $betAmount = min($balance, $maxBet);
+        } elseif ($betAmount < 1) {
+            $betAmount = 1;
         }
     
     
