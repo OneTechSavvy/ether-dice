@@ -4,7 +4,7 @@
 <style>
   html, body { padding: 0; margin: 0; width: 100%; height: 100%; }
   * {box-sizing: border-box;}
-  body { text-align: center; padding: 0; background: #d6433b; color: #fff; font-family: Open Sans; }
+  body { text-align: center; padding: 0; background: #050505; color: #fff; font-family: Open Sans; }
   h1 { font-size: 50px; font-weight: 100; text-align: center;}
   body { font-family: Open Sans; font-weight: 100; font-size: 20px; color: #fff; text-align: center; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center; -webkit-box-align: center; -ms-flex-align: center; align-items: center;}
   article { display: block; width: 700px; padding: 50px; margin: 0 auto; }
@@ -18,6 +18,6 @@
     <h1>We&rsquo;ll be back soon!</h1>
     <div>
         <p>Sorry for the inconvenience. We&rsquo;re performing some maintenance at the moment. If you need to you can always follow us on <a href="http://www.twitter.com/">Twitter</a> for updates, otherwise we&rsquo;ll be back up shortly!</p>
-        <p>&mdash; The [WEBSITE NAME] Team</p>
+        <p>&mdash; The [Cahootbet] Team</p>
     </div>
 </article>
