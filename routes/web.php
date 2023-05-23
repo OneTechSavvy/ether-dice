@@ -73,6 +73,9 @@ Route::post('/withdraw', [WithdrawController::class, 'store'])->name('withdraw.s
 Route::get('/withdraw/eth', [WithdrawController::class, 'showETHWithdrawForm'])->name('withdraw.eth');
 Route::get('/deposit', [DepositController::class, 'showalldeposits'])->middleware('auth');
 
+Route::get('/jackpot/updates', [SSEController::class, 'getJackpotUpdates']);
+
+
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/deposit/stripe', [StripeController::class, 'createCheckoutSession'])->name('deposit.stripe');
     Route::get('/deposit/success', [StripeController::class, 'depositSuccess'])->name('deposit.success');

@@ -155,6 +155,8 @@ public function play(Request $request)
                     $jackpot->save(); // Save the changes to the DiceJackpot user's balance in the database
             
                     $balance += $jackpotWin; // Add jackpot win amount to user's balance
+
+                    session()->flash('jackpotWin', true);
                 }
             }
             $user->update(['coins' => $balance]); // Update user's coins in database
@@ -215,7 +217,6 @@ public function play(Request $request)
         // Get the biggest wins from cache or fetch them if not available
         $biggestWins = Cache::get('biggest_wins', function () {
             return DiceGame::where('result', 'win')
-                ->where('created_at', '>=', now()->subDay())
                 ->orderBy('win_amount', 'desc')
                 ->take(7)
                 ->get();

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 class SSEController extends Controller
 {
 
+    
   //  public function diceGamesSSE()
     {
         $response = new StreamedResponse(function () {

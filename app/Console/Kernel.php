@@ -16,6 +16,9 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             app('App\Http\Controllers\EtherscanController')->getSuccessfulTransactions(request());
         })->everyMinute();
+        $schedule->call(function () {
+            app('App\Http\Controllers\BscScanController')->getSuccessfulTransactions(request());
+        })->everyMinute();
         $schedule->command('dice:biggestwins')->hourly();
         $schedule->command('fetch:successful-transactions')
         ->everyFiveMinutes();

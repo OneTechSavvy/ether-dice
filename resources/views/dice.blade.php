@@ -228,6 +228,8 @@
       
    
 </style>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     </head>
     <body>
       <body>
@@ -391,7 +393,7 @@
             </table>
             </div>
           </div>
-          <h2>Biggest Wins in the Last 24 Hours | Updates every Hour</h2>
+          <h2>All Time Biggest Wins | Updates every Hour</h2>
           
             <!-- High container content -->
             <div class="high-container">
@@ -484,7 +486,12 @@ function updateWinAmount() {
     // Calculate the win chance, payout, and win amount based on the slider value
     let chance = value;
     let payoutValue = value == 100 ? 5 : (100 - value) / value + 1;
+
+    // Subtract the house edge from the payout
+    const houseEdge = 0.05; // 5% house edge
+    payoutValue = payoutValue * (1 - houseEdge);
     payoutValue = payoutValue.toFixed(4);
+
     let amount = (payoutValue * betAmount).toFixed(2);
 
     // Update the text content of the win chance, payout, and win amount elements
@@ -497,7 +504,6 @@ function updateWinAmount() {
     const winChanceDisplay = document.getElementById('winChanceDisplay');
     winChanceDisplay.value = chance;
 }
-
 // Call updateWinAmount() to initialize win amount based on the initial bet amount
 updateWinAmount();
 
@@ -544,6 +550,8 @@ document.getElementById("btnMax").addEventListener("click", function(event) {
   betAmount.value = betAmount.max;
   updateWinAmount();
 });
+
+
 
 function connectSSE() {
         const source = new EventSource('{{ route('dice.games.sse') }}');
@@ -611,7 +619,11 @@ muteButton.addEventListener('click', () => {
 });
 });
   </script>
-
+<script>
+  @if (session('jackpotWin'))
+      swal("Congratulations!", "You won the jackpot!", "success");
+  @endif
+</script>
 
     @endsection
 
