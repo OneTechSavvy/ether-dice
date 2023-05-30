@@ -219,9 +219,10 @@ img:hover {
                         </div>
                     </div>
                     <div class="d-flex justify-content-around">
-                        <div class="card" onclick="showSTRIPEdepositForm()">
+                        <div class="card">
                             <img src="{{ asset('icons/stripe.png') }}" class="img" alt="Stripe" >
-                            
+                            <div class="text-center" style="color: black; font-weight: bold; font-size: 20px;">Coming Soon</div>
+
                         </div>
                     </div>
                     
@@ -244,8 +245,8 @@ img:hover {
           @foreach($deposits as $deposit)
               <tr>
                   <td>
-                      @if($deposit->network === 'goerli')
-                          <a href="https://goerli.etherscan.io/tx/{{ $deposit->hash }}" target="_blank">{{ $deposit->hash }}</a>
+                      @if($deposit->network === 'ethereum')
+                          <a href="https://etherscan.io/tx/{{ $deposit->hash }}" target="_blank">{{ $deposit->hash }}</a>
                       @elseif($deposit->network === 'bnb')
                           <a href="https://bscscan.com/tx/{{ $deposit->hash }}" target="_blank">{{ $deposit->hash }}</a>
                       @else

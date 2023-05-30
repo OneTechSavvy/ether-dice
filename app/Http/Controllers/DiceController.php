@@ -179,6 +179,8 @@ public function play(Request $request)
 
         $jackpotCoins = $houses['DiceJackpot']->coins ?? 0;
 
+        
+
     $game = new DiceGame([
         'user_id' => $user->id,
         'bet_amount' => $betAmount,
@@ -195,9 +197,8 @@ public function play(Request $request)
     $game->save();
     $biggestWins = Cache::get('biggest_wins', function () {
         return DiceGame::where('result', 'win')
-            ->where('created_at', '>=', now()->subDay())
             ->orderBy('win_amount', 'desc')
-            ->take(5)
+            ->take(7)
             ->get();
     });
         

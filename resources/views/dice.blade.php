@@ -6,6 +6,7 @@
     <head>
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
       <link rel="stylesheet" href="{{ asset('css/dice.css') }}">
+
         <style>
             .styled-table {
               font-family: 'Oswald', sans-serif;
@@ -35,6 +36,7 @@
             .styled-table th,
             .styled-table td {
                 padding: 7px 17px;
+                height: 50px;
                 
             }
 
@@ -137,12 +139,7 @@
             }
          
         
-          #winthe{
-            position: absolute;
-            width: 300px;
-            top: 60px;
-            right: 300px;
-          }
+    
   .table-dark thead tr {
     background-color: orange;
     font-size: 0.75em;
@@ -224,6 +221,32 @@
 #mute-button.muted img {
   content: url("{{ asset('icons/mute.png') }}");
 }
+@media only screen and (max-width: 600px) {
+  
+  .styled-table th,
+  .styled-table td {
+    padding: 5px;
+    font-size: 8px;
+    height: auto;
+  }
+  
+  .styled-table thead tr {
+    font-size: 12px;
+  }
+  
+  .logo {
+    margin-bottom: 100px;
+  }
+  
+  .info {
+    font-size: 6px;
+    top: 360px;
+  }
+  
+  .modal-content {
+    width: 80%;
+  }
+}
 
       
    
@@ -301,7 +324,7 @@
                   <button id="button1"style="margin-left: 2px;" class="popup-button">Jackpot</button>
                   <button id="button2" style="margin-left: 65px;" class="popup-button">Fairness</button>
               </div>
-              <img src="{{ asset('icons/winthejackpot.png') }}" alt="Cahoot Logo" id="winthe">
+              
 
                  <!-- Add the first modal (initially hidden) -->
                 <div id="modal1" class="modal">
@@ -335,6 +358,7 @@
                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
                      
                       <div class="jackpot-coins">
+                       JACKPOT &nbsp;
                       <img src="{{ asset('img/coins2.png') }}" alt="Coin Icon" height="20px" width="20px" >
                       <span class="jackpot-value">{{ $jackpotCoins }}  </span>
 
@@ -623,6 +647,26 @@ muteButton.addEventListener('click', () => {
   @if (session('jackpotWin'))
       swal("Congratulations!", "You won the jackpot!", "success");
   @endif
+
+
+  import Echo from 'laravel-echo';
+
+window.Pusher = require('pusher-js');
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    encrypted: true,
+    wsHost: window.location.hostname,
+    wsPort: 6001,
+});
+
+window.Echo.private('dice-games')
+    .listen('NewGameCreated', (e) => {
+        console.log(e.game);
+    });
+
 </script>
 
     @endsection

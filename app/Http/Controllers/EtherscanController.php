@@ -53,7 +53,7 @@ class EtherscanController extends Controller
                             $newTx->coin_value = $coinValue;
                             $newTx->gas_price = $tx['gasPrice'];
                             $newTx->gas_used = $tx['gasUsed'];
-                            $newTx->network = 'goerli'; // Set the network for ETH Goerli transactions
+                            $newTx->network = 'ethereum'; // Set the network for ethereum transactions
                             $newTx->save();
                         }
                     }
@@ -67,8 +67,8 @@ class EtherscanController extends Controller
     private function getEthereumTransactions($apiKey, $address)
     {
         $client = new Client([
-            'base_uri' => 'https://api-goerli.etherscan.io/api/',
-        ]);
+            'base_uri' => 'https://api.etherscan.io/api/',
+        ]);        
         $response = $client->request('GET', '', [
             'query' => [
                 'module' => 'account',
