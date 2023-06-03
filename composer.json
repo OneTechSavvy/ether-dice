@@ -9,6 +9,7 @@
         "bitwasp/bitcoin": "v0.0.35.2",
         "brick/math": "^0.10.2",
         "cboden/ratchet": "^0.4.4",
+        "doctrine/dbal": "^3.6",
         "guzzlehttp/guzzle": "^7.5",
         "kornrunner/keccak": "^1.1",
         "laravel/framework": "^10.0",

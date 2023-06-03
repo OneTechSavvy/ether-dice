@@ -17,10 +17,10 @@ use App\Models\User;
 
 class DiceController extends Controller
 {
- public function index()
+    public function index()
     {
         $result = null;
-       $winChance = null;
+        $winChance = null;
         $payout = null;
         $randNum = null;
         $winAmount = null;
@@ -39,17 +39,17 @@ class DiceController extends Controller
         $jackpotCoins = $jackpot ? $jackpot->coins : 0;
         $house = House::where('name', 'DiceHouse')->first(); // Get the DiceHouse user from the House table
         $maxBet = $house->max_bet;
-        
+    
         $biggestWins = Cache::remember('biggest_wins', 3600, function () {
             return DiceGame::where('result', 'win')
-                ->where('created_at', '>=', now()->subDay())
                 ->orderBy('win_amount', 'desc')
                 ->take(5)
                 ->get();
         });
-        
-        $lastGames = DiceGame::getLastNGames(9);
-
+    
+        // Fetch the last 8 games excluding the very latest one
+        $lastGames = DiceGame::orderBy('id', 'desc')->skip(1)->take(9)->get();
+    
         return view('dice', [
             'result' => $result,
             'winChance' => $winChance,
@@ -63,12 +63,9 @@ class DiceController extends Controller
             'lastGames' => $lastGames,
             'randNumValue' => $randNumValue, // Pass the randNum value to the view
             'max_bet' => $maxBet, 
-
         ]);
+    }
     
-    
-
-}
 
 public function play(Request $request)
 {
@@ -173,6 +170,7 @@ public function play(Request $request)
         } else {
             $house->coins += $betAmount; // Add bet amount to the DiceHouse user's balance if user loses
             $house->save(); // Save the changes to the DiceHouse user's balance in the database
+            $winAmount = null; // Set win amount to null if user loses
         }
     
         $user->update(['coins' => $balance]); // Update user's coins in database

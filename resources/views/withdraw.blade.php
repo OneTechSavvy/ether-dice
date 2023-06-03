@@ -33,8 +33,10 @@
     border-color: currentColor;
 }
 .card {
-  margin-top: 15px;
-  width: 195px;
+    top: 50%;
+  left: 50%;
+    margin-top: 15px;
+  width: 300px;
   height: 200px;
   margin-right: 20px;
   background: white;
@@ -43,7 +45,8 @@
   align-items: center;
   justify-content: center;
   color: white;
-  border-radius: 100px;
+
+  border-radius: 60%
 }
 
 .img {
@@ -160,6 +163,7 @@ h4{
 #withd{
     position: relative;
     right: 110px;
+    
 }  
 .form-group{
     color: white;
@@ -168,15 +172,40 @@ h4{
  h4 {
     top: 5px;
  }
-    </style>
+
+  .centered-text {
+    font-family: 'Oswald', sans-serif;
+    color: white;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  @media (max-width: 768px) {
+    .centered-text {
+      font-size: 16px;
+      top: 40%;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .centered-text {
+      font-size: 14px;
+      top: 30%;
+    }
+  }
+</style>
+
 
 
     <title>Withdraw</title>
 </head>
 <body>
     <div class="main-container">   
-    <div class="custom-container mt-5">
-    <img src="{{ asset('icons/withdrawal.png') }}" id= "withd"  alt="Cahoot Logo">
+        <div class="custom-container mt-5" style="position: relative;">
+            <img src="{{ asset('icons/withdrawal.png') }}" id="withd" alt="Cahoot Logo" style="position: absolute; top: 10%; left: 50%; transform: translate(-50%, -50%);">
         <div class="row mb-5">
             
         </div>
@@ -205,7 +234,7 @@ h4{
         </div>
     </div>
     </div>
-    <p style="font-family: 'Oswald', sans-serif; color: white; text-align: center; position: absolute; top: 700px; left: 500px;">We recommend withdrawing using Binance Coin as the gas fees are way lower.<br> Withdrawals will be checked manually during the beta launch but we expect to handle them very quickly and 100% within 24 hours.<br> Please contact us in <a href="https://telegram.me/ethdiceofficial" style="text-decoration: underline;">telegram</a> and we will handle the withdrawal request immediately </p>
+    <p style="font-family: 'Oswald', sans-serif; color: white; text-align: center; position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%);">We recommend withdrawing using Binance Coin as the gas fees are way lower.<br> Withdrawals will be checked manually during the beta launch, but we expect to handle them very quickly and 100% within 24 hours.<br> Please contact us in <a href="https://telegram.me/ethdiceofficial" style="text-decoration: underline;">telegram</a>, and we will handle the withdrawal request immediately.</p>
 
     <div id="eth-withdraw-form" class="hidden">
         <!-- ETH Withdrawal Form Here -->

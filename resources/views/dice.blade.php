@@ -409,7 +409,9 @@
                             <td>{{ $game->user->name }}</td>
                             <td>{{ $game->bet_amount }}</td>
                             <td>{{ $game->win_chance }}%</td>
-                            <td>{{ $game->win_amount }}</td>   
+                            <td style="{{ $game->win_amount ? 'color: green;' : '' }}">
+                              {{ $game->win_amount ?? '' }}
+                          </td>
                         </tr>
                     @endforeach
                     <!-- New games will be added here dynamically using JavaScript -->
@@ -578,45 +580,59 @@ document.getElementById("btnMax").addEventListener("click", function(event) {
 
 
 function connectSSE() {
-        const source = new EventSource('{{ route('dice.games.sse') }}');
+    const source = new EventSource('{{ route('dice.games.sse') }}');
 
-        source.onmessage = function(event) {
-    const game = JSON.parse(event.data);
+    // Initialize the last received game ID to 0
+    let lastReceivedGameId = 0;
 
-    const tableBody = document.getElementById('new-games-table').getElementsByTagName('tbody')[0];
-    const rowCount = tableBody.rows.length;
+    source.onmessage = function(event) {
+        const game = JSON.parse(event.data);
+
+        // Check if the game's ID is greater than the last received game's ID
+        if (game.id > lastReceivedGameId) {
+            // Update the last received game ID
+            lastReceivedGameId = game.id;
+
+            const tableBody = document.getElementById('new-games-table').getElementsByTagName('tbody')[0];
+            const rowCount = tableBody.rows.length;
 
             // Remove the oldest game if there are already 10 games displayed
-            if (rowCount >= 10) {
-        tableBody.deleteRow(rowCount - 1);
-    }
+            if (rowCount >= 9) {
+                tableBody.deleteRow(rowCount - 1);
+            }
 
             // Add the new game
             const row = tableBody.insertRow(0);
 
             row.insertCell().innerHTML = game.user_name;
             row.insertCell().innerHTML = game.bet_amount;
-            row.insertCell().innerHTML = game.win_chance;
-            row.insertCell().innerHTML = game.win_amount;
-        };
+            row.insertCell().innerHTML = game.win_chance + '%';
+            const winAmountCell = row.insertCell();
+winAmountCell.innerHTML = game.win_amount || '';
+if (game.win_amount) {
+    winAmountCell.style.color = 'green';
+}
+        }
+    };
 
-        source.onerror = function(error) {
-    if (source.readyState === EventSource.CLOSED) {
-        console.log("EventSource connection closed");
-        return;
-    } else if (source.readyState === EventSource.CONNECTING) {
-        console.log("EventSource reconnecting...");
-        return;
-    }
+    source.onerror = function(error) {
+        if (source.readyState === EventSource.CLOSED) {
+            console.log("EventSource connection closed");
+            return;
+        } else if (source.readyState === EventSource.CONNECTING) {
+            console.log("EventSource reconnecting...");
+            return;
+        }
 
-    console.error("EventSource failed:", error);
-};
-    }
+        console.error("EventSource failed:", error);
+    };
+}
 
 // Call the connectSSE function with a 1-second delay after the page is loaded
 window.addEventListener('DOMContentLoaded', function() {
     setTimeout(connectSSE, 1000);
 });
+
 
 var randNumValue = document.getElementById('randNumValue');
 

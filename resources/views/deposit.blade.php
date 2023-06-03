@@ -199,12 +199,15 @@ img:hover {
 </head>
 <body>
     <div class="main-container">   
-    <div class="custom-container mt-5">
-    <img src="{{ asset('icons/deposit.png') }}" id= "depo" alt="Cahoot Logo">
-        <div class="row">
-            <div class="col-md-12">
-                
-                <div class="row row-cols-3 g-4">
+        <div class="custom-container mt-5" style="position: relative;">
+            <img src="{{ asset('icons/deposit.png') }}" id="withd" alt="Cahoot Logo" style="position: absolute; top: 1%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="row mb-5">
+            
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                   
+                    <div class="row row-cols-3 g-4">
                     <!-- Add more cryptocurrencies in the same format -->
                     <div class="d-flex justify-content-around">
                       <div class="card" onclick="showBSCdepositForm()">

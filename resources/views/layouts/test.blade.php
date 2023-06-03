@@ -283,7 +283,14 @@ left: 50px;
 .dice-container {
   display: flex;
 }
-
+.backgroundclass {
+min-height:calc(100vh);
+        background:#3b3b47;
+        background:-moz-linear-gradient(top,#202027 0,#202027 19%,#3e3e4a 50%,#202027 80%,#202027 100%);
+        background:-webkit-gradient(left top,left bottom,color-stop(0,#202027),color-stop(19%,#202027),color-stop(50%,#3e3e4a),color-stop(80%,#202027),color-stop(100%,#202027));
+        background:-webkit-linear-gradient(top,#202027 0,#202027 19%,#3e3e4a 50%,#202027 80%,#202027 100%);background:-o-linear-gradient(top,#202027 0,#202027 19%,#3e3e4a 50%,#202027 80%,#202027 100%);background:-ms-linear-gradient(top,#202027 0,#202027 19%,#3e3e4a 50%,#202027 80%,#202027 100%)}@media (max-width:767px){body{-webkit-user-select:none;
+        -webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}}img{max-width:100%
+        }
 
 </style>
    
@@ -298,16 +305,18 @@ left: 50px;
      
 </head>
 <body>
+  @stack('modals')
 
+  @livewireScripts
 
   <div id="app">
     <nav class="navbar navbar-expand-sm navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
             <div class="dice-container">
-            <img src="{{ asset('icons/dice.png') }}"   alt="Cahoot Logo" id="logo2">
-            <img src="{{ asset('icons/dice.png') }}"   alt="Cahoot Logo" id="logo3">
-            <img src="{{ asset('icons/ethdice13.png') }}"   alt="Cahoot Logo" id="logo4">
+            <img src="{{ asset('icons/dice.png') }}"   alt="Ethdice Logo" id="logo2">
+            <img src="{{ asset('icons/dice.png') }}"   alt="Ethdice Logo" id="logo3">
+            <img src="{{ asset('icons/ethdice13.png') }}"   alt="Ethdice2 Logo" id="logo4">
           </div>
             </a>
            

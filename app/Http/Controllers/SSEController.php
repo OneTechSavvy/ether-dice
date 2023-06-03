@@ -10,38 +10,34 @@ use Illuminate\Support\Facades\DB;
 class SSEController extends Controller
 {
 
-    
   //  public function diceGamesSSE()
     {
         $response = new StreamedResponse(function () {
-            $last_game_id = null;
-            $max_games = 50;
-            $count = 0;
+            // Initialize the last sent game ID to 0
+            $lastSentGameId = 0;
     
-            while ($count < $max_games) {
+            while (true) {
                 try {
-                    $newGamesQuery = DiceGame::select('dice_games.*', 'users.name as user_name')
+                    // Fetch the latest game
+                    $latestGame = DiceGame::select('dice_games.*', 'users.name as user_name')
                         ->join('users', 'dice_games.user_id', '=', 'users.id')
-                        ->where('dice_games.created_at', '>=', now()->subDay());
+                        ->orderBy('dice_games.id', 'desc')
+                        ->first();
     
-                    if ($last_game_id) {
-                        $newGamesQuery->where('dice_games.id', '>', $last_game_id);
-                    }
+                    // Check if there is a new game
+                    if ($latestGame && $latestGame->id > $lastSentGameId) {
+                        // Update the last sent game ID
+                        $lastSentGameId = $latestGame->id;
     
-                    $newGame = $newGamesQuery->orderBy('dice_games.id', 'desc')->first();
-    
-                    if ($newGame) {
-                        $last_game_id = $newGame->id;
-    
-                        echo 'data: ' . json_encode($newGame) . "\n\n";
+                        echo 'data: ' . json_encode($latestGame) . "\n\n";
                         ob_flush();
                         flush();
-    
-                        $count++;
                     }
-                    sleep(1); // Adjust sleep time as needed
+    
+                    // Sleep for a while before checking for new data
+                    usleep(100000); // Sleep for 0.1 seconds
                 } catch (Exception $e) {
-                    sleep(10);
+                    usleep(100000); // Sleep for 0.1 seconds
                 }
             }
         });
@@ -53,6 +49,4 @@ class SSEController extends Controller
     
         return $response;
     }
-    
-
 }
