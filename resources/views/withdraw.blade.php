@@ -172,32 +172,17 @@ h4{
  h4 {
     top: 5px;
  }
-
-  .centered-text {
-    font-family: 'Oswald', sans-serif;
-    color: white;
-    text-align: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
+ 
+ text
+{
+    font-family: 'Oswald', sans-serif; 
+    color: white; text-align: center; 
+    position: relative; 
+    margin-top: 10%; 
+    left: 50%; 
     transform: translate(-50%, -50%);
-  }
-
-  @media (max-width: 768px) {
-    .centered-text {
-      font-size: 16px;
-      top: 40%;
-    }
-  }
-
-  @media (max-width: 576px) {
-    .centered-text {
-      font-size: 14px;
-      top: 30%;
-    }
-  }
-</style>
-
+}
+    </style>
 
 
     <title>Withdraw</title>
@@ -234,7 +219,7 @@ h4{
         </div>
     </div>
     </div>
-    <p style="font-family: 'Oswald', sans-serif; color: white; text-align: center; position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%);">We recommend withdrawing using Binance Coin as the gas fees are way lower.<br> Withdrawals will be checked manually during the beta launch, but we expect to handle them very quickly and 100% within 24 hours.<br> Please contact us in <a href="https://telegram.me/ethdiceofficial" style="text-decoration: underline;">telegram</a>, and we will handle the withdrawal request immediately.</p>
+    <text>We recommend withdrawing using Binance Coin as the gas fees are way lower.<br> Withdrawals will be checked manually during the beta launch, but we expect to handle them very quickly and 100% within 24 hours.<br> Please contact us in <a href="https://telegram.me/ethdiceofficial" style="text-decoration: underline;">telegram</a>, and we will handle the withdrawal request immediately.</text>
 
     <div id="eth-withdraw-form" class="hidden">
         <!-- ETH Withdrawal Form Here -->

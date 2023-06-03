@@ -157,7 +157,15 @@ img:hover {
 }  
     </style>
     <style>
+            .table-container {
+        position: absolute;
+        width: 100%;
+        top: 75%;
+        justify-content: center;
+        align-items: center;
+    }
       table {
+          
           width: 100%;
           border-collapse: collapse;
       }
@@ -223,9 +231,7 @@ img:hover {
                     </div>
                     <div class="d-flex justify-content-around">
                         <div class="card">
-                            <img src="{{ asset('icons/stripe.png') }}" class="img" alt="Stripe" >
-                            <div class="text-center" style="color: black; font-weight: bold; font-size: 20px;">Coming Soon</div>
-
+                            <img src="{{ asset('icons/stripe2.png') }}" class="img" alt="Stripe" >
                         </div>
                     </div>
                     
@@ -234,35 +240,36 @@ img:hover {
         </div>
     </div>
     </div>
-
-    <table>
-      <thead>
-          <tr>
-              <th>Hash</th>
-              <th>Value (ETH)</th>
-              <th>Value (Coins)</th>
-              <th>Date</th>
-          </tr>
-      </thead>
-      <tbody>
-          @foreach($deposits as $deposit)
-              <tr>
-                  <td>
-                      @if($deposit->network === 'ethereum')
-                          <a href="https://etherscan.io/tx/{{ $deposit->hash }}" target="_blank">{{ $deposit->hash }}</a>
-                      @elseif($deposit->network === 'bnb')
-                          <a href="https://bscscan.com/tx/{{ $deposit->hash }}" target="_blank">{{ $deposit->hash }}</a>
-                      @else
-                          {{ $deposit->hash }}
-                      @endif
-                  </td>
-                  <td>{{ $deposit->value }}</td>
-                  <td>{{ $deposit->coin_value }}</td>
-                  <td>{{ date('Y-m-d H:i:s', $deposit->timestamp) }}</td>
-              </tr>
-          @endforeach
-      </tbody>
-  </table>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Hash</th>
+                    <th>Value (ETH)</th>
+                    <th>Value (Coins)</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($deposits as $deposit)
+                    <tr>
+                        <td>
+                            @if($deposit->network === 'ethereum')
+                                <a href="https://etherscan.io/tx/{{ $deposit->hash }}" target="_blank">{{ $deposit->hash }}</a>
+                            @elseif($deposit->network === 'bnb')
+                                <a href="https://bscscan.com/tx/{{ $deposit->hash }}" target="_blank">{{ $deposit->hash }}</a>
+                            @else
+                                {{ $deposit->hash }}
+                            @endif
+                        </td>
+                        <td>{{ $deposit->value }}</td>
+                        <td>{{ $deposit->coin_value }}</td>
+                        <td>{{ date('Y-m-d H:i:s', $deposit->timestamp) }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
     <div id="eth-deposit-form" class="hidden">
         <!-- ETH Withdrawal Form Here -->
         <div class="form-window-container">
@@ -335,7 +342,7 @@ img:hover {
         </div>
     </div>
 </div>
-  <p style="font-family: 'Oswald', sans-serif; color: white; text-align: center; position: absolute; top: 700px; left: 650px;">We recommend depositing using Binance Coin as the gas fees are way lower.<br>Deposits will be credited automatically within 5 minutes.<br> Please contact us in <a href="https://telegram.me/ethdiceofficial" style="text-decoration: underline;">telegram</a> if you have any issues! </p>
+  <p style="font-family: 'Oswald', sans-serif; color: white; text-align: center; position: relavite; top: 650px; margin-left: 300px">We recommend depositing using Binance Coin as the gas fees are way lower.<br>Deposits will be credited automatically within 5 minutes.<br> Please contact us in <a href="https://telegram.me/ethdiceofficial" style="text-decoration: underline;">telegram</a> if you have any issues! </p>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
