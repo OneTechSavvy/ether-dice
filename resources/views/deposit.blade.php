@@ -149,6 +149,7 @@ img:hover {
     margin-top: 30px;
     width: 100%;
 }
+
 #depo{
     position: relative;
     right: 110px;
@@ -191,6 +192,15 @@ img:hover {
       table, th, td, tr, a {
           color: white;
       }
+      h4{
+    color: white;
+    font-weight: bold;
+    font-family: 'Oswald', sans-serif;
+    position: absolute;
+    bottom: 380px;
+}
+
+
   </style>
 
     <title>Deposit</title>
@@ -218,7 +228,7 @@ img:hover {
                     <div class="row row-cols-3 g-4">
                     <!-- Add more cryptocurrencies in the same format -->
                     <div class="d-flex justify-content-around">
-                      <div class="card" onclick="showBSCdepositForm()">
+                        <div class="card" onclick="showBSCdepositForm()">
                             <img src="{{ asset('icons/bnblogo.png') }}" class="img" alt="BNB" >
                          
                         </div>
@@ -275,13 +285,12 @@ img:hover {
         <div class="form-window-container">
             <button class="back-button" onclick="hideETHdepositForm()">Back</button>
             <div class="form-window-content">
-              <div class="flex flex-col items-center">
-                <div class="bg-gray-100 px-4 py-8 rounded-md max-w-md w-full">
-                  <h2 class="text-2xl font-semibold mb-4">Deposit</h2>
-                  <div class="flex items-center mb-4">
-                    <p class="mr-4">{{ auth()->user()->eth_address }}</p>
-                    <button class="bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded-md" onclick="copyToClipboard('{{ auth()->user()->eth_address }}')">Copy</button>
-                  </div>
+                <h4>Deposit Ethereum</h4>
+                <div class="form-group">
+                    <label for="eth_address">Ethereum Deposit Address:</label>
+                    <input type="text" name="eth_address" id="eth_address" class="form-control" value="{{ auth()->user()->eth_address }}" readonly style="width: 100%;">
+                    <button class="bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded-md" onclick="copyToClipboard()">Copy</button>
+                </div>
                   <div class="bg-white px-4 py-8 rounded-md max-w-md w-full mt-8">
                     <h2 class="text-2xl font-semibold mb-4">Crypto converter</h2>
                     <input type="number" id="coin_value" placeholder="Enter coin value">
@@ -295,20 +304,20 @@ img:hover {
         </div>
     </div>
     <div id="eth-deposit-form" class="hidden">
-      <!-- ETH Withdrawal Form Here -->
+      <!-- bsc Withdrawal Form Here -->
       <div class="form-window-container">
           <button class="back-button" onclick="hideBSCdepositForm()">Back</button>
           <div class="form-window-content">
-            <div class="flex flex-col items-center">
-              <div class="bg-gray-100 px-4 py-8 rounded-md max-w-md w-full">
-                <h2 class="text-2xl font-semibold mb-4">Deposit</h2>
-                <div class="flex items-center mb-4">
-                  <p class="mr-4">{{ auth()->user()->eth_address }}</p>
-                  <button class="bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded-md" onclick="copyToClipboard('{{ auth()->user()->eth_address }}')">Copy</button>
-                </div>
-                <div class="bg-white px-4 py-8 rounded-md max-w-md w-full mt-8">
-                  <h2 class="text-2xl font-semibold mb-4">Crypto converter</h2>
-                  <!-- Add your crypto converter code here -->
+            <h4>Deposit BNB</h4>
+            <div class="form-group">
+                <label for="eth_address">BNB Deposit Address:</label>
+                <input type="text" name="eth_address" id="eth_address" class="form-control" value="{{ auth()->user()->eth_address }}" readonly style="width: 100%;">
+                <button class="bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded-md" onclick="copyToClipboard()">Copy</button>
+            </div>
+              <div class="bg-white px-4 py-8 rounded-md max-w-md w-full mt-8">
+                <h2 class="text-2xl font-semibold mb-4">Crypto converter</h2>
+                <input type="number" id="coin_value" placeholder="Enter coin value">
+                <div id="eth_value">BNB Value: -</div>
                 </div>
               </div>
             </div>
@@ -431,5 +440,21 @@ coinValueInput.addEventListener('input', function (event) {
 
 
 </script>
+<script>
+    function copyToClipboard() {
+      /* Get the text field */
+      var copyText = document.getElementById("eth_address");
+    
+      /* Select the text field */
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); /* For mobile devices */
+    
+       /* Copy the text inside the text field */
+      document.execCommand("copy");
+    
+      /* Alert the copied text */
+      alert("Copied the text: " + copyText.value);
+    }
+    </script>
 
 @endsection

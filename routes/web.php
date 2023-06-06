@@ -74,7 +74,7 @@ Route::get('/withdraw/eth', [WithdrawController::class, 'showETHWithdrawForm'])-
 Route::get('/deposit', [DepositController::class, 'showalldeposits'])->middleware('auth');
 
 Route::get('/jackpot/updates', [SSEController::class, 'getJackpotUpdates']);
-
+Route::get('/jackpot', [JackpotController::class, 'jackpot']);
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/deposit/stripe', [StripeController::class, 'createCheckoutSession'])->name('deposit.stripe');
@@ -102,7 +102,10 @@ Route::get('/dice-games-sse', [SSEController::class, 'diceGamesSSE'])->name('dic
 Route::post('/telegram/send-message', [TelegramController::class, 'sendMessage']);
 
 
-
+Route::get('/test', function () {
+    event(new \App\Events\TestEvent('Hello, world!'));
+    return 'Event has been sent!';
+});
 
 
 
