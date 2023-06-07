@@ -10,7 +10,7 @@ use App\Models\User;
 class BscScanController extends Controller
 {
     
-    public function getSuccessfulTransactions(Request $request)
+    public function getSuccessfulbscTransactions(Request $request)
     {
         $bscApiKey = 'FF6I7JPYAN35QPU5C9H31SJ479GPI4V8SU'; // replace with your BscScan API key
         $coinGeckoClient = new Client([
@@ -46,10 +46,13 @@ class BscScanController extends Controller
                             $newTx->gas_used = $tx['gasUsed'];
                             $newTx->network = 'bnb'; // Set the network for bnb transactions
                             $newTx->save();
+
+                          
                         }
                     }
                 }
             }
+            sleep(6);
         }
 
         return response()->json(['message' => 'Success']);

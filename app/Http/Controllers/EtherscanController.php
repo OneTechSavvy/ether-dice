@@ -55,6 +55,8 @@ class EtherscanController extends Controller
                             $newTx->gas_used = $tx['gasUsed'];
                             $newTx->network = 'ethereum'; // Set the network for ethereum transactions
                             $newTx->save();
+                            
+                            sleep(6);
                         }
                     }
                 }

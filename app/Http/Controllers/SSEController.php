@@ -14,30 +14,39 @@ class SSEController extends Controller
     {
         $response = new StreamedResponse(function () {
             // Initialize the last sent game ID to 0
-            $lastSentGameId = 0;
+            static $lastSentGameId = 0;
+    
+            // Turn on output buffering
+            ob_start();
     
             while (true) {
                 try {
-                    // Fetch the latest game
-                    $latestGame = DiceGame::select('dice_games.*', 'users.name as user_name')
+                    // Fetch the latest game whose ID is greater than the last sent game's ID
+                    $newGame = DiceGame::select('dice_games.*', 'users.name as user_name')
                         ->join('users', 'dice_games.user_id', '=', 'users.id')
+                        ->where('dice_games.id', '>', $lastSentGameId)
                         ->orderBy('dice_games.id', 'desc')
                         ->first();
     
-                    // Check if there is a new game
-                    if ($latestGame && $latestGame->id > $lastSentGameId) {
+                    if ($newGame) {
                         // Update the last sent game ID
-                        $lastSentGameId = $latestGame->id;
+                        $lastSentGameId = $newGame->id;
     
-                        echo 'data: ' . json_encode($latestGame) . "\n\n";
-                        ob_flush();
+                        echo 'data: ' . json_encode($newGame) . "\n\n";
+    
+                        // Flush the output buffer if there's something to flush
+                        if (ob_get_length()) {
+                            ob_flush();
+                        }
+    
+                        // Flush system output buffer
                         flush();
                     }
     
                     // Sleep for a while before checking for new data
-                    usleep(100000); // Sleep for 0.1 seconds
+                    sleep(1);
                 } catch (Exception $e) {
-                    usleep(100000); // Sleep for 0.1 seconds
+                    sleep(1);
                 }
             }
         });
