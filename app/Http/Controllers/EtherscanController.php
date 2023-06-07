@@ -11,14 +11,7 @@ use Illuminate\Support\Facades\Cache;
 
 class EtherscanController extends Controller
 {
-    
-    public function __construct()
-{
-    $this->client = new Client([
-        'base_uri' => 'https://api.coingecko.com/api/v3/',
-    ]);
-}
-    
+     
     public function getSuccessfulTransactions(Request $request)
     {
         $ethApiKey = 'NMHIJP3N6ACFDC97VK9WWYQ9VWMTRX3WZA'; // replace with your Etherscan API key
@@ -55,12 +48,13 @@ class EtherscanController extends Controller
                             $newTx->gas_used = $tx['gasUsed'];
                             $newTx->network = 'ethereum'; // Set the network for ethereum transactions
                             $newTx->save();
+
                             
-                            sleep(6);
                         }
                     }
                 }
             }
+            sleep(6);
         }
 
         return response()->json(['message' => 'Success']);
