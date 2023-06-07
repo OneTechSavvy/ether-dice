@@ -43,7 +43,7 @@ class DiceController extends Controller
         $biggestWins = Cache::remember('biggest_wins', 3600, function () {
             return DiceGame::where('result', 'win')
                 ->orderBy('win_amount', 'desc')
-                ->take(5)
+                ->take(7)
                 ->get();
         });
     
