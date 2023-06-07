@@ -314,9 +314,11 @@ min-height:calc(100vh);
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
             <div class="dice-container">
+
             <img src="{{ asset('icons/dice.png') }}"   alt="Ethdice Logo" id="logo2">
             <img src="{{ asset('icons/dice.png') }}"   alt="Ethdice Logo" id="logo3">
             <img src="{{ asset('icons/ethdice13.png') }}"   alt="Ethdice2 Logo" id="logo4">
+
           </div>
             </a>
            
@@ -385,7 +387,7 @@ min-height:calc(100vh);
   <div class="footer-left">
   <div class="dice-container">
           
-            <img src="{{ asset('icons/ethdice13.png') }}"   alt="Cahoot Logo" id="logobottom">
+            <img src="{{ asset('icons/ethdice1.png') }}"   alt="Cahoot Logo" id="logobottom">
           </div>
     <p>Copyright© 2022 - 2023 ethdice.com - All rights reserved.
       <br>Contact: support@ethdice.com
