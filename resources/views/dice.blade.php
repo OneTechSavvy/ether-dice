@@ -36,6 +36,7 @@
             .styled-table th,
             .styled-table td {
                 padding: 7px 17px;
+                height: 50px;
                 
             }
 
@@ -220,10 +221,38 @@
 #mute-button.muted img {
   content: url("{{ asset('icons/mute.png') }}");
 }
+@media only screen and (max-width: 600px) {
+  
+  .styled-table th,
+  .styled-table td {
+    padding: 5px;
+    font-size: 8px;
+    height: auto;
+  }
+  
+  .styled-table thead tr {
+    font-size: 12px;
+  }
+  
+  .logo {
+    margin-bottom: 100px;
+  }
+  
+  .info {
+    font-size: 6px;
+    top: 360px;
+  }
+  
+  .modal-content {
+    width: 80%;
+  }
+}
 
       
    
 </style>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     </head>
     <body>
       <body>
@@ -245,7 +274,7 @@
                     <label for="betAmount">Bet Amount:</label>
                     <input type="hidden" name="winChance" id="winChanceInput" value="{{ $winChance }}" style="border-radius: 6px; width: 20px;">
                     <div class="bet-input-modifiers">
-                      <input type="number" id="betAmount" placeholder="0.00" name="betAmount" min="1" max="{{ $balance }}" value="{{ session('betAmount', $betAmount) }}" required>
+                      <input type="number" id="betAmount" placeholder="0.00" name="betAmount" min="1" max="{{ min($balance, $max_bet) }}" value="{{ session('betAmount', $betAmount) }}" required>
                       <div class="bet-modifiers">
                         <button id="btn01" class="modifier-button">0.1</button>
                         <button id="btn1" class="modifier-button">1</button>
@@ -253,6 +282,7 @@
                         <button id="btn2x" class="modifier-button">2x</button>
                         <button id="btnMin" class="modifier-button">Min</button>
                         <button id="btnMax" class="modifier-button">Max</button>
+                        
                       </div>
                     </div>
                   </div>
@@ -294,7 +324,7 @@
                   <button id="button1"style="margin-left: 2px;" class="popup-button">Jackpot</button>
                   <button id="button2" style="margin-left: 65px;" class="popup-button">Fairness</button>
               </div>
-           
+              
 
                  <!-- Add the first modal (initially hidden) -->
                 <div id="modal1" class="modal">
@@ -328,7 +358,7 @@
                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
                      
                       <div class="jackpot-coins">
-                      JACKPOT &nbsp;
+                       JACKPOT &nbsp;
                       <img src="{{ asset('img/coins2.png') }}" alt="Coin Icon" height="20px" width="20px" >
                       <span class="jackpot-value">{{ $jackpotCoins }}  </span>
 
@@ -379,7 +409,9 @@
                             <td>{{ $game->user->name }}</td>
                             <td>{{ $game->bet_amount }}</td>
                             <td>{{ $game->win_chance }}%</td>
-                            <td>{{ $game->win_amount }}</td>   
+                            <td style="{{ $game->win_amount ? 'color: green;' : '' }}">
+                              {{ $game->win_amount ?? '' }}
+                          </td>
                         </tr>
                     @endforeach
                     <!-- New games will be added here dynamically using JavaScript -->
@@ -387,7 +419,7 @@
             </table>
             </div>
           </div>
-          <h2>Biggest Wins in the Last 24 Hours | Updates every Hour</h2>
+          <h2>All Time Biggest Wins | Updates every Hour</h2>
           
             <!-- High container content -->
             <div class="high-container">
@@ -404,7 +436,7 @@
                   @foreach($biggestWins as $win)
                     <tr>
                       <td>{{ $win->user->name }}</td>
-                      <td>${{ $win->win_amount }}</td>
+                      <td>{{ $win->win_amount }}</td>
                       <td>{{ $win->created_at }}</td>
                     </tr>
                   @endforeach
@@ -480,7 +512,12 @@ function updateWinAmount() {
     // Calculate the win chance, payout, and win amount based on the slider value
     let chance = value;
     let payoutValue = value == 100 ? 5 : (100 - value) / value + 1;
+
+    // Subtract the house edge from the payout
+    const houseEdge = 0.05; // 5% house edge
+    payoutValue = payoutValue * (1 - houseEdge);
     payoutValue = payoutValue.toFixed(4);
+
     let amount = (payoutValue * betAmount).toFixed(2);
 
     // Update the text content of the win chance, payout, and win amount elements
@@ -493,7 +530,6 @@ function updateWinAmount() {
     const winChanceDisplay = document.getElementById('winChanceDisplay');
     winChanceDisplay.value = chance;
 }
-
 // Call updateWinAmount() to initialize win amount based on the initial bet amount
 updateWinAmount();
 
@@ -541,46 +577,62 @@ document.getElementById("btnMax").addEventListener("click", function(event) {
   updateWinAmount();
 });
 
+
+
 function connectSSE() {
-        const source = new EventSource('{{ route('dice.games.sse') }}');
+    const source = new EventSource('{{ route('dice.games.sse') }}');
 
-        source.onmessage = function(event) {
-    const game = JSON.parse(event.data);
+    // Initialize the last received game ID to 0
+    let lastReceivedGameId = 0;
 
-    const tableBody = document.getElementById('new-games-table').getElementsByTagName('tbody')[0];
-    const rowCount = tableBody.rows.length;
+    source.onmessage = function(event) {
+        const game = JSON.parse(event.data);
+
+        // Check if the game's ID is greater than the last received game's ID
+        if (game.id > lastReceivedGameId) {
+            // Update the last received game ID
+            lastReceivedGameId = game.id;
+
+            const tableBody = document.getElementById('new-games-table').getElementsByTagName('tbody')[0];
+            const rowCount = tableBody.rows.length;
 
             // Remove the oldest game if there are already 10 games displayed
-            if (rowCount >= 10) {
-        tableBody.deleteRow(rowCount - 1);
-    }
+            if (rowCount >= 9) {
+                tableBody.deleteRow(rowCount - 1);
+            }
 
             // Add the new game
             const row = tableBody.insertRow(0);
 
             row.insertCell().innerHTML = game.user_name;
             row.insertCell().innerHTML = game.bet_amount;
-            row.insertCell().innerHTML = game.win_chance;
-            row.insertCell().innerHTML = game.payout;
-        };
+            row.insertCell().innerHTML = game.win_chance + '%';
+            const winAmountCell = row.insertCell();
+winAmountCell.innerHTML = game.win_amount || '';
+if (game.win_amount) {
+    winAmountCell.style.color = 'green';
+}
+        }
+    };
 
-        source.onerror = function(error) {
-    if (source.readyState === EventSource.CLOSED) {
-        console.log("EventSource connection closed");
-        return;
-    } else if (source.readyState === EventSource.CONNECTING) {
-        console.log("EventSource reconnecting...");
-        return;
-    }
+    source.onerror = function(error) {
+        if (source.readyState === EventSource.CLOSED) {
+            console.log("EventSource connection closed");
+            return;
+        } else if (source.readyState === EventSource.CONNECTING) {
+            console.log("EventSource reconnecting...");
+            return;
+        }
 
-    console.error("EventSource failed:", error);
-};
-    }
+        console.error("EventSource failed:", error);
+    };
+}
 
 // Call the connectSSE function with a 1-second delay after the page is loaded
 window.addEventListener('DOMContentLoaded', function() {
     setTimeout(connectSSE, 1000);
 });
+
 
 var randNumValue = document.getElementById('randNumValue');
 
@@ -607,7 +659,15 @@ muteButton.addEventListener('click', () => {
 });
 });
   </script>
+<script>
+  @if (session('jackpotWin'))
+      swal("Congratulations!", "You won the jackpot!", "success");
+  @endif
 
+
+
+
+</script>
 
     @endsection
 
