@@ -84,6 +84,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 
 Route::get('/convert-coins-to-eth', [EtherscanController::class, 'convertCoinsToEth']);
+Route::get('/convert-coins-to-bnb', [BscScanController::class, 'convertCoinsToBnb']);
 Route::get('/admin', [WithdrawController::class, 'getAllWithdrawals'])->name('admin');
 
 Route::middleware(['auth', 'admin'])->group(function () {

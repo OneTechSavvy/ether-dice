@@ -280,51 +280,58 @@ img:hover {
             </tbody>
         </table>
     </div>
-    <div id="eth-deposit-form" class="hidden">
+    <div id="bsc-deposit-form" class="hidden">
         <!-- ETH Withdrawal Form Here -->
         <div class="form-window-container">
-            <button class="back-button" onclick="hideETHdepositForm()">Back</button>
+            <button class="back-button" onclick="hideBSCdepositForm()">Back</button>
             <div class="form-window-content">
-                <h4>Deposit Ethereum</h4>
+            <h4 style="margin-top: 55px;">Deposit BNB</h4>
+
                 <div class="form-group">
-                    <label for="eth_address">Ethereum Deposit Address:</label>
-                    <input type="text" name="eth_address" id="eth_address" class="form-control" value="{{ auth()->user()->eth_address }}" readonly style="width: 100%;">
+                <label for="eth_address" style="font-weight: bold; color: white">BNB Deposit Address:</label>
+
+                    <input type="text" name="eth_address" id="eth_address" class="form-control" value="{{ auth()->user()->eth_address }}" readonly style="width: 150%;">
                     <button class="bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded-md" onclick="copyToClipboard()">Copy</button>
                 </div>
-                  <div class="bg-white px-4 py-8 rounded-md max-w-md w-full mt-8">
-                    <h2 class="text-2xl font-semibold mb-4">Crypto converter</h2>
-                    <input type="number" id="coin_value" placeholder="Enter coin value">
-                    <div id="eth_value">ETH Value: -</div>
+                <div class="bg-white px-2 py-4 rounded-md">
+                    <h2 class="text-2xl font-semibold mb-4">Coin Calculator:</h2>
+                    <input type="number" id="bnb_coin_value" placeholder="Number of coins..">
+                    <div id="bnb_value">BNB Value: -</div>
 
-                  </div>
+                
                 </div>
               </div>
-                </form>
-            </div>
+             
+
+           
         </div>
+        <p style="font-family: 'Oswald', sans-serif; color: white; text-align: center; margin-left: 20%;";>We recommend depositing using Binance Coin as the gas fees are way lower.<br>Deposits will be credited automatically within 5 minutes.<br> Please contact us in <a href="https://telegram.me/ethdiceofficial" style="text-decoration: underline;">telegram</a> if you have any issues!  </p>
     </div>
     <div id="eth-deposit-form" class="hidden">
-      <!-- bsc Withdrawal Form Here -->
+      
+      
       <div class="form-window-container">
-          <button class="back-button" onclick="hideBSCdepositForm()">Back</button>
-          <div class="form-window-content">
-            <h4>Deposit BNB</h4>
-            <div class="form-group">
-                <label for="eth_address">BNB Deposit Address:</label>
-                <input type="text" name="eth_address" id="eth_address" class="form-control" value="{{ auth()->user()->eth_address }}" readonly style="width: 100%;">
-                <button class="bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded-md" onclick="copyToClipboard()">Copy</button>
-            </div>
-              <div class="bg-white px-4 py-8 rounded-md max-w-md w-full mt-8">
-                <h2 class="text-2xl font-semibold mb-4">Crypto converter</h2>
-                <input type="number" id="coin_value" placeholder="Enter coin value">
-                <div id="eth_value">BNB Value: -</div>
+            <button class="back-button" onclick="hideETHdepositForm()">Back</button>
+            <div class="form-window-content">
+            <h4 style="margin-top: 55px;">Deposit Ethereum</h4>
+
+                <div class="form-group">
+                <label for="eth_address" style="font-weight: bold; color: white">Ethereum Deposit Address:</label>
+
+                    <input type="text" name="eth_address" id="eth_address" class="form-control" value="{{ auth()->user()->eth_address }}" readonly style="width: 150%;">
+                    <button class="bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded-md" onclick="copyToClipboard()">Copy</button>
                 </div>
-              </div>
+                  <div class="bg-white px-2 py-4 rounded-md">
+                    <h2 class="text-2xl font-semibold mb-4">Coin Calculator:</h2>
+                    <input type="number" id="eth_coin_value" placeholder="Number of coins..">
+                    <div id="eth_value">ETH Value: -</div>
+                  
+   
+                
+                 </div>
             </div>
-              </form>
-          </div>
-      </div>
-  </div>
+          
+        </div>
   <div id="stripe-deposit-form" class="hidden">
     <div class="form-window-container">
         <button class="back-button" onclick="hideStripeDepositForm()">Back</button>
@@ -382,16 +389,16 @@ function showBSCdepositForm() {
     // Remove the cryptocurrency card grid
     document.querySelector('.row-cols-3').classList.add('hidden');
     // Display the ETH withdrawal form
-    document.querySelector('#eth-deposit-form').classList.remove('hidden');
+    document.querySelector('#bsc-deposit-form').classList.remove('hidden');
 }
 function hideBSCdepositForm() {
     // Hide the ETH withdrawal form
-    document.querySelector('#eth-deposit-form').classList.add('hidden');
+    document.querySelector('#bsc-deposit-form').classList.add('hidden');
     // Remove the "hidden" class from the cryptocurrency card grid
     document.querySelector('.row-cols-3').classList.remove('hidden');
     // Display the main container
     document.querySelector('.main-container').classList.remove('hidden');
-}
+} 
 function showSTRIPEdepositForm() {
     // Hide the main container
     document.querySelector('.main-container').classList.add('hidden');
@@ -413,17 +420,16 @@ function hideSTRIPEdepositForm() {
 
 
 <script>
-const coinValueInput = document.getElementById('coin_value');
+const bnbCoinValueInput = document.getElementById('bnb_coin_value');
+const ethCoinValueInput = document.getElementById('eth_coin_value');
 const ethValueDisplay = document.getElementById('eth_value');
+const bnbValueDisplay = document.getElementById('bnb_value');
 
-coinValueInput.addEventListener('input', function (event) {
+ethCoinValueInput.addEventListener('input', function (event) {
     const coinValue = event.target.value;
 
     fetch('/convert-coins-to-eth?coin_value=' + coinValue)
         .then(response => {
-            console.log('Status Code:', response.status); // Log the status code
-            console.log('Response:', response); // Log the response object
-
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -437,6 +443,27 @@ coinValueInput.addEventListener('input', function (event) {
             console.error('There was a problem with the fetch operation:', error);
         });
 });
+
+
+bnbCoinValueInput.addEventListener('input', function (event) {
+    const coinValue = event.target.value;
+
+    fetch('/convert-coins-to-bnb?coin_value=' + coinValue)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const bnbValue = data.bnb_value;
+            bnbValueDisplay.textContent = 'BNB Value: ' + bnbValue.toFixed(4);
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+});
+
 
 
 </script>

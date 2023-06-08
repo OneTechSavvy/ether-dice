@@ -6,9 +6,18 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use App\Models\Transaction;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 
 class BscScanController extends Controller
 {
+    private $client;
+    
+    public function __construct()
+    {
+        $this->client = new Client([
+            'base_uri' => 'https://api.coingecko.com/api/v3/',
+        ]);
+    }
     
     public function getSuccessfulbscTransactions(Request $request)
     {
@@ -83,16 +92,43 @@ class BscScanController extends Controller
 
     private function getBnbToUsdRate($client)
     {
-        $response = $client->request('GET', 'simple/price', [
-            'query' => [
-                'ids' => 'binancecoin',
-                'vs_currencies' => 'usd',
-            ],
-        ]);
-        $body = json_decode($response->getBody(), true);
-
-        return $body['binancecoin']['usd'];
+        // Retrieve the cached BNB to USD rate, if available
+        $bnbToUsdRate = Cache::get('bnb_to_usd_rate');
+    
+        // If the rate is not cached, fetch it and store it in the cache
+        if ($bnbToUsdRate === null) {
+            $response = $client->request('GET', 'simple/price', [
+                'query' => [
+                    'ids' => 'binancecoin',
+                    'vs_currencies' => 'usd',
+                ],
+            ]);
+            $body = json_decode($response->getBody(), true);
+            $bnbToUsdRate = $body['binancecoin']['usd'];
+    
+            // Cache the BNB to USD rate for 5 minutes
+            Cache::put('bnb_to_usd_rate', $bnbToUsdRate, 300); // 300 seconds = 5 minutes
+        }
+    
+        return $bnbToUsdRate;
     }
+    public function convertCoinsTobnb(Request $request)
+{
+    $coinValue = $request->input('coin_value');
+    $usdPerCoin = 1 / 2; // 1 USD is worth 2 coins
+
+    // Convert the coin value to USD
+    $usdValue = $coinValue * $usdPerCoin;
+
+    // Get the current BNB to USD rate
+    $bnbToUsdRate = $this->getBnbToUsdRate($this->client);
+
+    // Convert the USD value to BNB
+    $bnbValue = $usdValue / $bnbToUsdRate;
+
+    return response()->json(['bnb_value' => $bnbValue]);
+}
+
     
 
 }

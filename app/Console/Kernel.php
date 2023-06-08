@@ -15,10 +15,10 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(function () {
             app('App\Http\Controllers\EtherscanController')->getSuccessfulTransactions(request());
-        })->everyMinute();
+        })->everyFiveMinutes();
         $schedule->call(function () {
-            app('App\Http\Controllers\BscScanController')->getSuccessfulTransactions(request());
-        })->everyMinute();
+            app('App\Http\Controllers\BscScanController')->getSuccessfulbscTransactions(request());
+        })->everyFiveMinutes();
         $schedule->command('dice:biggestwins')->hourly();
         $schedule->command('fetch:successful-transactions')
         ->everyFiveMinutes();
@@ -40,6 +40,7 @@ class Kernel extends ConsoleKernel
     {
         
         $this->load(__DIR__.'/Commands');
+
 
 
         require base_path('routes/console.php');

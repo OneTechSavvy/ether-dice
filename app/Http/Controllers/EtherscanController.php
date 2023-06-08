@@ -11,7 +11,14 @@ use Illuminate\Support\Facades\Cache;
 
 class EtherscanController extends Controller
 {
-     
+    private $client;
+    
+    public function __construct()
+    {
+        $this->client = new Client([
+            'base_uri' => 'https://api.coingecko.com/api/v3/',
+        ]);
+    }
     public function getSuccessfulTransactions(Request $request)
     {
         $ethApiKey = 'NMHIJP3N6ACFDC97VK9WWYQ9VWMTRX3WZA'; // replace with your Etherscan API key
