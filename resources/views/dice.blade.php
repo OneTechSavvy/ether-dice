@@ -258,12 +258,12 @@
       <body>
         <div class="main-container">
         
-          <div class="game-live-wrapper">
+          <div class="game-live-wrapper gap-4 xl:gap-0 xl:flex-row flex-col">
             <div class="game-container">
               <div class="left-container">
                 <!-- Left container content -->
                
-                <form class="form-container" method="POST" action="{{ route('dice.play') }}">
+                <form id="dice-play-form" class="form-container" method="POST" action="{{ route('dice.play') }}">
                   @csrf
                   <div class="win-chance-input">
                       <label for="winChanceDisplay">Choose win chance with the slider. Roll within the blue area to win! </label>
@@ -287,11 +287,10 @@
                     </div>
                   </div>
                   <button class="button-69" type="submit">Roll the Dice!</button>
-                </form>
-                <div class="result">
+                  <div class="result">
                 @if(session('winAmount'))
-                      @if(session('result') == 'win')
-                       You rolled {{ session('randNumValue') }} and won {{ session('winAmount')}} coins! 
+                      @if(session('result') == "win")
+                       You rolled <span id="winRandNumValue">{{ session('randNumValue') }}</span> and won <span id="winAmount">{{ session('winAmount')}}</span> coins! 
                        <audio id="win-sound">
                           <source src="{{ asset('icons/win.mp3') }}" type="audio/mpeg">
                      </audio>
@@ -305,11 +304,13 @@
                           }
                          </script>
                       @else
-                          You rolled {{ session('randNumValue') }} and lost.
+                          You rolled <span id="winRandNumValue">{{ session('randNumValue') }}</span> and lost.
                           
                       @endif
                   @endif
                   </div>
+                </form>
+                
                   <button id="mute-button">
   <img src="{{ asset('icons/unmute.png') }}" alt="Unmute">
 </button>
@@ -373,7 +374,7 @@
                           <div id="selectValue"></div>
                       </div>
                     </div>
-                      <div class="win-info">
+                      <div class="win-info hidden md:flex">
                           <div class="win-chance" style="display: inline-block;">
                               <p>Win Chance:<br> </p><span id="win-chance">{{ $winChance }} </span>%
                           </div>
@@ -393,7 +394,7 @@
               </form>
               </div>
             </div>
-            <div class="live-container">
+            <div class="live-container md:ml-0 md:justify-center">
               <table id="new-games-table" class="styled-table">
                 <thead>
                     <tr>
@@ -403,7 +404,7 @@
                         <th>Won</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="lastgames-tbody">
                     @foreach($lastGames as $game)
                         <tr>
                             <td>{{ $game->user->name }}</td>
@@ -432,7 +433,7 @@
                     <th scope="col">Time</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="biggestwins-tbody">
                   @foreach($biggestWins as $win)
                     <tr>
                       <td>{{ $win->user->name }}</td>
@@ -633,15 +634,8 @@ window.addEventListener('DOMContentLoaded', function() {
     setTimeout(connectSSE, 1000);
 });
 
-
-var randNumValue = document.getElementById('randNumValue');
-
-// Show the randNumValue and set a timeout to fade it out
-randNumValue.style.opacity = 1;
-setTimeout(function() {
-  randNumValue.style.opacity = 0;
-}, 1000); // Change the time (in milliseconds) to adjust how long the value stays on the screen
 document.addEventListener('DOMContentLoaded', () => {
+  showRandomNr()
 const muteButton = document.getElementById('mute-button');
 let isMuted = localStorage.getItem('isMuted') === 'true';
 
@@ -665,6 +659,92 @@ muteButton.addEventListener('click', () => {
   @endif
 
 
+  function updateUI (response) {
+    const { biggestWins, lastGames, balance, randNumValue, result, winAmount } = response
+    showRandomNr(randNumValue)
+    getGames(biggestWins, lastGames)
+    updateBalance(balance)
+    updateWinAmount(result, winAmount, randNumValue)
+    if (result == "win") {
+      const muteButton = document.getElementById('mute-button');
+      let isMuted = localStorage.getItem('isMuted') === 'true';
+      var audio = document.getElementById("win-sound");
+      if (!isMuted) {
+        audio.play();
+      }
+    }
+  }
+
+  $('#dice-play-form').submit(function(event) {
+    event.preventDefault();
+    $.ajax({
+      url: $(this).attr('action'),
+      type: $(this).attr('method'),
+      data: $(this).serialize(), 
+      success: function(response) {
+        console.log(response)
+        updateUI(response)
+      },
+      error: function(xhr, status, error) {
+        // Handle errors
+        console.log(status + ": " + error); // Log the error
+      }
+    })
+  })
+
+  function updateBalance(balance) {
+    document.querySelector('.coin-balance').innerHTML = balance.toFixed(2)
+  }
+
+  function getGames(biggestWins, lastGames) {
+    biggestWinsHTML = biggestWins.reduce((trData, tdData, id) => {
+      return "<tr>"  
+      + "<td>" + tdData.user?.name + "</td>"
+      + "<td>$" + tdData.win_amount + "</td>"
+      + "<td>" + tdData.created_at + "</td>"
+      + "</tr>"
+    }, "")
+    document.getElementById('biggestwins-tbody').innerHTML = biggestWinsHTML
+
+    lastgameHTML = lastGames.reduce((trData, tdData, id) => {
+      return trData + "<tr>"  
+      + "<td>" + tdData.user.name + "</td>"
+      + "<td>$" + tdData.bet_amount + "</td>"
+      + "<td>" + tdData.win_chance + "</td>"
+      + "<td style = '" + (tdData.win_amount ? "color:green" : "") + "'>" + (tdData.win_amount || '')  + "</td>"
+      + "</tr>"
+    }, "")
+    document.getElementById('lastgames-tbody').innerHTML = lastgameHTML
+  }
+
+  function showRandomNr (value = undefined) {
+    var randNumValue = document.getElementById('randNumValue');
+    if(value) {
+      randNumValue.innerHTML = value
+    }
+    
+
+    // Show the randNumValue and set a timeout to fade it out
+    randNumValue.style.opacity = 1;
+    setTimeout(function() {
+      randNumValue.style.opacity = 0;
+    }, 1000); // Change the time (in milliseconds) to adjust how long the value stays on the screen
+  }
+
+  function updateWinAmount (result, winAmount, randNumValue) {
+    var resultDiv = document.querySelector('.result')
+    var resultHTML = ""
+    if(result == "win"){
+      resultHTML = "You rolled <span id='winRandNumValue'>" + randNumValue + "</span> and won <span id='winAmount'>" + winAmount + "</span> coins!  \
+                       <audio id='win-sound'> \
+                          <source src=\"{{ asset('icons/win.mp3') }}\" type='audio/mpeg'> \
+                     </audio>"
+      
+    }
+    else resultHTML = "You rolled <span id='winRandNumValue'>" + (randNumValue || '') + "</span> and lost."
+
+    resultDiv.innerHTML = resultHTML
+  }
 
 
 </script>

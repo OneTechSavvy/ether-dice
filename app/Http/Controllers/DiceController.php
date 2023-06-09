@@ -191,37 +191,28 @@ public function play(Request $request)
         'ticket' => $ticket,
         'created_at' => now(),
     ]);
+
+    
+
     
     $game->save();
     $biggestWins = Cache::get('biggest_wins', function () {
         return DiceGame::where('result', 'win')
             ->orderBy('win_amount', 'desc')
             ->take(7)
+            ->with('user')
             ->get();
     });
-        
+    $lastGames = DiceGame::orderBy('id', 'desc')->skip(1)->take(9)->with('user')->get();
 
-    session(['betAmount' => $betAmount]);
-    session(['winChance' => $winChance]);
-    return redirect()->route('dice')->with([
-        'winAmount' => $winAmount,
-        'result' => $result,
-        'rand_num' => $randNum,
-    ]);
-
+    session(compact("betAmount", "winChance", "result", "winAmount"));
+    // return redirect()->route('dice')->with([
+    //     'winAmount' => $winAmount,
+    //     'result' => $result,
+    //     'rand_num' => $randNum,
+    // ]);
+        return response(compact("biggestWins", "lastGames", "balance", "randNumValue", "result", "winAmount"));
  
-    }
-    public function getBiggestWins()
-    {
-        // Get the biggest wins from cache or fetch them if not available
-        $biggestWins = Cache::get('biggest_wins', function () {
-            return DiceGame::where('result', 'win')
-                ->orderBy('win_amount', 'desc')
-                ->take(7)
-                ->get();
-        });
-    
-        return $biggestWins;
     }
 }
 

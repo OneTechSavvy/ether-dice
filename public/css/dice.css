@@ -89,7 +89,6 @@ box-shadow:  8px 8px 16px #131317,
   flex-direction: column;
   width: 300px;
   height: 500px;
-  justify-content: center;
   
   border-radius: 10px;
 background: #2f2f39;
@@ -231,6 +230,54 @@ input[type="number"] {
   .button-69 {
     padding: 19px 32px;
   }
+  
+}
+
+@media (max-width: 1286px) {
+  .live-container{
+    width: 100%;
+    height: 100%
+  }
+  .game-container{
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .game-container {
+    grid-template-columns: 1fr;
+    height: 730px
+  }
+  .jackpot-coins {
+    margin-top: 20px
+  }
+  #slider{
+    width: 400px !important;
+    margin-top: 60px
+  }
+  #btn01 {
+    margin-top: 18px;
+    margin-left: 12px
+  }
+  .result {
+    top: 350px
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar-brand{
+    width: 80%
+  }
+}
+
+@media (max-width: 480px) {
+  #slider{
+    width: 240px !important;
+    margin-top: 70px
+  }
+  .jackpot-coins {
+    margin-top: 20px
+  }
 }
 
 .button-69:before,
@@ -310,8 +357,9 @@ input[type="number"] {
 }
 #btn01, #btn2x {
   margin-left: 2px;
- 
 }
+
+
 
 .modifier-button {
   font-family: 'Oswald', sans-serif;

@@ -136,65 +136,9 @@ body {
   font-weight: bold;
 }
 footer {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: auto;
-  grid-template-areas: "left center right";
   background-color: #16181F;
-  font-size: 10px;
-  font-family: 'Oswald', sans-serif;
-  color: #fff;
-  width: 100%;
-  position: relative;
 }
 
-.footer-left {
-  grid-area: left;
-  margin-left: 300px;
-  margin-top: 15px;
-  margin-bottom: 10px;
-  white-space: nowrap;
-}
-.footer-left img {
-  max-width: 300px;
-  height: auto;
-}
-.footer-left p {
-  margin-top: 15px;
-  margin-left: 25px;
-  
-}
-
-.footer-center {
-  margin-left: 50px;
-  margin-top: 30px;
-  grid-area: center;
-}
-.footer-center ul {
-  margin-top: 15px;
-  list-style-type: none;
-  padding-left: 0px;
-  font-size: 10px;
-}
-.footer-center ul li a {
-  color: #fff;
-}
-
-.footer-right {
-  margin-left: 50px;
-  margin-top: 25px;
-  margin-bottom: 25px;
-  grid-area: right;
-}
-.footer-right img {
-  display: inline-block;
-}
-.community-images img {
-  margin-top: 10px;
-  margin-right: 10px;
-  width: 50px;
-  height: 50px;
-}
 h3 {
   font-size: 24px;
   margin-bottom: 10px;
@@ -292,6 +236,10 @@ min-height:calc(100vh);
         -webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}}img{max-width:100%
         }
 
+        .community img{
+          width: 50px
+        }
+
 </style>
    
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-868DP62C77"></script>
@@ -383,31 +331,36 @@ min-height:calc(100vh);
 </div>
 </div>
         
-<footer>
-  <div class="footer-left">
-  <div class="dice-container">
-          
-            <img src="{{ asset('icons/ethdice1.png') }}"   alt="Cahoot Logo" id="logobottom">
-          </div>
-    <p>Copyright© 2022 - 2023 ethdice.com - All rights reserved.
+<footer class="flex text-white flex-col md:flex-row md:px-4 lg:px-48 xl:px-64 items-center md:items-start">
+  <div class="flex flex-1 flex-column mt-4">
+    <div class="dice-container">
+      <img src="{{ asset('icons/ethdice13.png') }}" alt="Cahoot Logo" style="max-width: 220px">
+    </div>
+    <p class="m-0 ml-1 mt-4">Copyright© 2022 - 2023 ethdice.com - All rights reserved.
       <br>Contact: support@ethdice.com
     </p>
   </div>
-  <div class="footer-center">
-    <h3>About</h3>
-    <ul>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Roadmap</a></li>
-      <li><a href="/whitepaper">Whitepaper</a></li>
-      <li><a href="#">Terms of Service</a></li>
-    </ul>
+  <div class="flex flex-1 mt-8">
+    <div class="md:flex-1"></div>
+    <div class="flex flex-1 flex-column font-bold">
+      <h3 class="text-2xl">About</h3>
+      <ul>
+        <li><a href="#" class="text-xs hover:text-white">About</a></li>
+        <li><a href="#" class="text-xs hover:text-white">Roadmap</a></li>
+        <li><a href="/whitepaper" class="text-xs hover:text-white">Whitepaper</a></li>
+        <li><a href="#" class="text-xs hover:text-white">Terms of Service</a></li>
+      </ul>
+    </div>
   </div>
-  <div class="footer-right">
-    <h3>Community</h3>
-    <div class="community-images">
-      <a href="#"><img src="{{ asset('icons/twitter.png') }}" alt="Twitterlogo"></a>
-      <a href="#"><img src="{{ asset('icons/telegram.png') }}" alt="Telegramlogo"></a>
-      <br><br><br><br><br><br>
+  <div class="flex flex-1 mt-8">
+    <div class="md:flex-1"></div>
+    <div class="flex flex-1 flex-column">
+      <h3 class="text-2xl font-bold">Community</h3>
+      <div class="flex community gap-6">
+        <a href="#"><img src="{{ asset('icons/twitter.png') }}" alt="Twitterlogo"></a>
+        <a href="#"><img src="{{ asset('icons/telegram.png') }}" alt="Telegramlogo"></a>
+        <br><br><br><br><br><br>
+      </div>
     </div>
   </div>
 </footer>
@@ -416,12 +369,5 @@ min-height:calc(100vh);
    
     </div>
 </div>
-
-
-
-
-
-
-
 </body>
 </html>
