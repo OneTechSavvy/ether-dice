@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use App\Models\User;
+use GuzzleHttp\Client;
+
 
 
 
@@ -43,7 +45,8 @@ class DiceController extends Controller
         $biggestWins = Cache::remember('biggest_wins', 3600, function () {
             return DiceGame::where('result', 'win')
                 ->orderBy('win_amount', 'desc')
-                ->take(7)
+                ->with('user:id,name')
+                ->take(6)
                 ->get();
         });
     
@@ -69,6 +72,13 @@ class DiceController extends Controller
 
 public function play(Request $request)
 {
+
+    $jackpot = House::where('name', 'DiceJackpot')->first();
+    $jackpotCoins = $jackpot ? $jackpot->coins : 0;
+    
+    $client = new \GuzzleHttp\Client(); // Guzzle HTTP client
+    $telegramBotToken = env('TELEGRAM_BOT_TOKEN'); // Retrieve your Telegram bot token
+
     $user = auth()->user();
     $balance = $user->coins;
     
@@ -83,6 +93,7 @@ public function play(Request $request)
 
     $validatedData = $request->validate([
         'betAmount' => ['required', 'numeric', 'min:1', 'max:' . $maxBet],
+        'winChance' => ['required', 'numeric', 'min:5', 'max:90'],
     ]);
     
     // Combine the server and client seeds to create a unique seed for the game
@@ -132,6 +143,11 @@ public function play(Request $request)
         $house = House::where('name', 'DiceHouse')->first(); // Get the DiceHouse user from the House table
         
         $ticket = null; // Set ticket to null by default
+        
+        $houseEdge = 0;
+        
+        $jackpotWin = false; // Initialize jackpotWin as false at the start of your function
+
    
 
     
@@ -143,6 +159,32 @@ public function play(Request $request)
           
             $ticket = rand(1, 100000); // Generate a random number from 1 to 100000 as a ticket
             // Check if the bet amount is greater than or equal to 1 coin
+            if($winAmount >= 5) {
+                // If the win amount is 200 or more, send a message to your Telegram channel
+    
+                // Prepare the text of the message
+                $message = "User " . $user->name . " just won " . $winAmount . " coins! The jackpot is currently " . $jackpotCoins . " coins!";
+    
+                try {
+                    // Send the HTTP request to the Telegram API
+                    $response = $client->request('POST', 'https://api.telegram.org/bot' . $telegramBotToken . '/sendMessage', [
+                        'query' => [
+                            'chat_id' => '@lolumoa', // Replace with your Telegram channel username
+                            'text' => $message,
+                        ]
+                    ]);
+    
+                    // Optional: Check the response status code for success
+                    if ($response->getStatusCode() != 200) {
+                        // Log an error message if the request was not successful
+                        Log::error('Failed to send message to Telegram: ' . $response->getBody());
+                    }
+    
+                } catch (\Exception $e) {
+                    // Log the exception message if the request failed completely
+                    Log::error('Failed to send message to Telegram: ' . $e->getMessage());
+                }
+            }
             if ($betAmount >= 1) {
                 // Check if the ticket matches the jackpot number
                 if ($ticket == 42424) { 
@@ -150,31 +192,51 @@ public function play(Request $request)
                     $jackpotWin = $jackpot->coins * 0.8; // Calculate 80% of the DiceJackpot balance
                     $jackpot->coins -= $jackpotWin; // Remove 80% from DiceJackpot balance
                     $jackpot->save(); // Save the changes to the DiceJackpot user's balance in the database
+                    
+                    
             
                     $balance += $jackpotWin; // Add jackpot win amount to user's balance
 
-                    session()->flash('jackpotWin', true);
+                    $jackpotWin = true;
                 }
             }
             $user->update(['coins' => $balance]); // Update user's coins in database
         
-            // Send 90% of house edge to DiceHouse
-            $house->coins -= round(0.9 * $houseEdge, 2); 
-            $house->save(); // Save the changes to the DiceHouse user's balance in the database
-            
+            $house->coins -= $winAmount - $betAmount;
+
             // Send 10% of house edge to DiceJackpot
             $jackpot = House::where('name', 'DiceJackpot')->first();
-            $jackpotAmount = round(0.1 * $houseEdge, 2);
+            $jackpotAmount = round(0.05 * $houseEdge, 2);
             $jackpot->coins += $jackpotAmount;
+    
+            // Subtract the jackpot amount from DiceHouse balance
+            $house->coins -= $jackpotAmount;
+    
+            $house->save(); // Save the changes to the DiceHouse user's balance in the database
             $jackpot->save(); // Save the changes to the DiceJackpot user's balance in the database
         } else {
-            $house->coins += $betAmount; // Add bet amount to the DiceHouse user's balance if user loses
+            // Add bet amount to the DiceHouse user's balance if user loses
+            $house->coins += $betAmount; 
+    
+            // Calculate house edge as 5% of bet amount
+            $houseEdge = round(0.05 * $betAmount, 2);
+    
+            // Send 10% of house edge to DiceJackpot
+            $jackpot = House::where('name', 'DiceJackpot')->first();
+            $jackpotAmount = round(0.05 * $houseEdge, 2);
+            $jackpot->coins += $jackpotAmount;
+    
+            // Subtract the jackpot amount from DiceHouse balance
+            $house->coins -= $jackpotAmount;
+    
             $house->save(); // Save the changes to the DiceHouse user's balance in the database
+            $jackpot->save(); // Save the changes to the DiceJackpot user's balance in the database
+    
             $winAmount = null; // Set win amount to null if user loses
         }
     
         $user->update(['coins' => $balance]); // Update user's coins in database
-
+    
         $jackpotCoins = $houses['DiceJackpot']->coins ?? 0;
 
         
@@ -189,6 +251,7 @@ public function play(Request $request)
         'win_amount' => $winAmount,
         'jackpotCoins' => $jackpotCoins,
         'ticket' => $ticket,
+        'house_edge' => $houseEdge, // Add this line
         'created_at' => now(),
     ]);
 
@@ -199,11 +262,11 @@ public function play(Request $request)
     $biggestWins = Cache::get('biggest_wins', function () {
         return DiceGame::where('result', 'win')
             ->orderBy('win_amount', 'desc')
-            ->take(7)
-            ->with('user')
+            ->take(6)
+            ->with('user:id,name')
             ->get();
     });
-    $lastGames = DiceGame::orderBy('id', 'desc')->skip(1)->take(9)->with('user')->get();
+$lastGames = DiceGame::orderBy('id', 'desc')->take(9)->with('user')->get();
 
     session(compact("betAmount", "winChance", "result", "winAmount"));
     // return redirect()->route('dice')->with([
@@ -211,7 +274,12 @@ public function play(Request $request)
     //     'result' => $result,
     //     'rand_num' => $randNum,
     // ]);
-        return response(compact("biggestWins", "lastGames", "balance", "randNumValue", "result", "winAmount"));
+
+    $jackpotCoins = House::where('name', 'DiceJackpot')->first()->coins;
+    broadcast(new \App\Events\DiceRolledEvent(compact("biggestWins", "lastGames", "jackpotCoins")))->toOthers();
+
+        return response(compact("biggestWins", "lastGames", "balance", "randNumValue", "result", "winAmount", "jackpotCoins", "jackpotWin"));
+
  
     }
 }

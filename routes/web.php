@@ -13,13 +13,15 @@ use App\Http\Controllers\SeedController;
 use App\Http\Controllers\CoinflipController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\WithdrawController;
-use App\Http\Controllers\MatchBettingController;
+use App\Http\Controllers\MatchbettingController;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Http\Controllers\SSEController;
 use App\Http\Controllers\BscScanController;
 use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\DepositController; // Replace with your DepositController namespace
 use App\Http\Controllers\StripeController;
+
+
 
 
 
@@ -44,9 +46,7 @@ Route::get('/', function () {
 Route::get('/whitepaper', function () {
     return view('whitepaper');
 });
-Route::get('/dashboard', function () {
-    return view('dasboard');
-});
+
 
 
 
@@ -59,6 +59,7 @@ Route::middleware([
         return view('dice');
     })->name('dice');
 });
+
 
 Route::get('/', [DiceController::class, 'index'])->name('home');
 Route::post('/crypto-wallets', 'App\Http\Controllers\CryptoWalletsController@update')->name('crypto-wallets.update');
@@ -73,8 +74,8 @@ Route::post('/withdraw', [WithdrawController::class, 'store'])->name('withdraw.s
 Route::get('/withdraw/eth', [WithdrawController::class, 'showETHWithdrawForm'])->name('withdraw.eth');
 Route::get('/deposit', [DepositController::class, 'showalldeposits'])->middleware('auth');
 
-Route::get('/jackpot/updates', [SSEController::class, 'getJackpotUpdates']);
-Route::get('/jackpot', [JackpotController::class, 'jackpot']);
+
+
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/deposit/stripe', [StripeController::class, 'createCheckoutSession'])->name('deposit.stripe');
@@ -90,23 +91,39 @@ Route::get('/admin', [WithdrawController::class, 'getAllWithdrawals'])->name('ad
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
     Route::get('/admindice', [\App\Http\Controllers\AdminController::class, 'admindice'])->name('admin.dice');
+    Route::get('/betslip', [AdminController::class, 'betslip'])->name('admin.betslip');
+    Route::post('/create-betslip', [MatchbettingController::class, 'createBetslip'])->name('create.betslip');
+    Route::get('/adminusers', [\App\Http\Controllers\AdminController::class, 'adminusers'])->name('admin.users');
     Route::get('/bscscan/successful-transactions', [BscScanController::class, 'getSuccessfulTransactions']);
     Route::get('/etherscan/successful-transactions', [EtherscanController::class, 'getSuccessfulTransactions']);
     Route::put('/withdrawals/{id}/approve', [AdminController::class, 'approveWithdrawal'])->name('withdrawals.approve');
     Route::put('/withdrawals/{id}/reject', [AdminController::class, 'rejectWithdrawal'])->name('withdrawals.reject');
     Route::put('/house/updateMaxBet', [App\Http\Controllers\AdminController::class, 'updateMaxBet'])->name('house.updateMaxBet');
+    Route::post('/betslip/{betslip}/close', [MatchbettingController::class, 'closeBetslip'])->name('closeBetslip');
+    Route::put('betslip/{betslip}/freeze', [MatchbettingController::class, 'freezeBetslip'])->name('freezeBetslip');
+
+
+
+});
+Route::get('/coinflip', [CoinflipController::class, 'index'])->name('coinflip.index');
+Route::middleware(['auth'])->group(function () {
+    Route::post('/coinflip/create_game', [CoinflipController::class, 'createGame'])->name('coinflip.create_game');
+    Route::post('/coinflip/join_game/{gameId}', [CoinflipController::class, 'joinGame'])->name('coinflip.join_game');
+    Route::post('/coinflip/cancel_game/{gameId}', [CoinflipController::class, 'cancelGame'])->name('coinflip.cancel_game');
+
+});
+Route::get('/bet-history', 'App\Http\Controllers\BetHistoryController@index')->name('betHistory');
+Route::get('/matchbetting', [MatchbettingController::class, 'index']);
+Route::middleware(['auth'])->group(function () {
+    Route::post('/placeBet/{betslip}', [matchbettingController::class, 'placeBet'])->name('placeBet');
+    
+    
 
 });
 
-    
-Route::get('/dice-games-sse', [SSEController::class, 'diceGamesSSE'])->name('dice.games.sse');
 Route::post('/telegram/send-message', [TelegramController::class, 'sendMessage']);
 
 
-Route::get('/test', function () {
-    event(new \App\Events\TestEvent('Hello, world!'));
-    return 'Event has been sent!';
-});
 
 
 

@@ -88,7 +88,8 @@ public function store(Request $request)
     // Create a new withdrawal record
     $withdrawal = new Withdrawal();
     $withdrawal->user_id = $user->id;
-    $withdrawal->coins = $request->coins;
+    // save total withdrawal amount (coins + gas price)
+    $withdrawal->coins = $request->coins + $gasPrice; 
     $withdrawal->eth_address = $request->eth_address;
     $withdrawal->bnb_address = $request->bnb_address;
     $withdrawal->save();
@@ -112,12 +113,6 @@ public function store(Request $request)
         return redirect()->back()->with('error', 'An error occurred while processing your request. Please try again later.');
     }
 }
-    
-    public function getAllWithdrawals()
-{
-    $withdrawals = Withdrawal::all();
-    return view('admin.index', compact('withdrawals'));
-}
 
 
 public function showGas()
@@ -132,6 +127,36 @@ public function showGas()
 
     return view('withdraw', ['gasPrice' => $gasPrice]);
 }
+public function rejectWithdrawal($id)
+{
+    try {
+        DB::beginTransaction();
+        
+        $withdrawal = Withdrawal::findOrFail($id);
+        $user = User::findOrFail($withdrawal->user_id);
+        
+        // return coins back to the user
+        $user->coins += $withdrawal->coins;
+        
+        $user->save();
+        
+        // update withdrawal status to rejected
+        $withdrawal->status = 'rejected';
+        $withdrawal->save();
+        
+        DB::commit();
+        
+        return redirect()->back()->with('success', 'Withdrawal request has been rejected and coins are returned to the user.');
+    } catch (\Exception $e) {
+        DB::rollback();
+        
+        return redirect()->back()->with('error', 'An error occurred while processing your request. Please try again later.');
+    }
+}
+
+
+
+
 }
 
 

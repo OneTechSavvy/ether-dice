@@ -10,6 +10,7 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id')->after('id')->nullable();   // or the appropriate position in your schema
             $table->string('hash')->unique();
             $table->unsignedBigInteger('block_number');
             $table->unsignedBigInteger('timestamp');

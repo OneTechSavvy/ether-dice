@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
@@ -58,4 +59,12 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+    public function diceGames()
+    {
+        return $this->hasMany(DiceGame::class);
+    }
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'to_address', 'eth_address');
+    }
 }

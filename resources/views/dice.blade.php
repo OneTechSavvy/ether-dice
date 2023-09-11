@@ -304,7 +304,7 @@
                           }
                          </script>
                       @else
-                          You rolled <span id="winRandNumValue">{{ session('randNumValue') }}</span> and lost.
+                          
                           
                       @endif
                   @endif
@@ -333,16 +333,7 @@
                       <span class="close close1">&times;</span>
                       <p>A Jackpot is a huge prize separate from your standard Dice wins, and comes as a percentage of Jackpot Pool.
 
-                        Jackpot Pool carries a 10% gross profit of the Dice game. This grows each time the Dice is played without a Jackpot won.
-                        
-                        How To Enter?
-                        The bet needs to be a winning one.
-                        How To Hit The Jackpot?
-                        You receive a random 5 digit number every time you make a valid bet.
-                        When this number is 42424, you've hit the Jackpot!
-                        The prize is sent to your account balance once you win. You do not need to report it anywhere.
-                        How Big Is The Prize?
-                        Jackpot Prize = 80% of the Jackpot Pool 
+                         
                        </p>
                   </div>
               </div>
@@ -350,7 +341,7 @@
               <div id="modal2" class="modal">
                 <div class="modal-content">
                     <span class="close close2">&times;</span>
-                    <p>Information about the game (Modal 2)...</p>
+                    <p>Each bet is generated using a random hash seed. More information coming!</p>
                 </div>
             </div>
             
@@ -361,7 +352,7 @@
                       <div class="jackpot-coins">
                        JACKPOT &nbsp;
                       <img src="{{ asset('img/coins2.png') }}" alt="Coin Icon" height="20px" width="20px" >
-                      <span class="jackpot-value">{{ $jackpotCoins }}  </span>
+                      <span id="jackpot-value" class="jackpot-value">{{ $jackpotCoins }}</span>
 
                       </div>
               
@@ -387,7 +378,7 @@
                       </div>
 
                       <div class="info">
-                            1 ethdice coin is worth approximately $0.5. Chance of winning jackpot is 1/100 000 when betting atleast 1 coin. <br>
+                            1 ethdice coin is worth exactly 0.5 USDT. Chance of winning jackpot is 1/100 000 when betting atleast 1 coin. <br>
                             Chosen win chance does not matter - chance of winning the jackpot stays the same! 
 
                       </div>
@@ -487,24 +478,16 @@
         </script>
         
         <script>
-        
-            // Get the range input field and the win chance, payout, and win amount elements
-            const betAmountInput = document.getElementById('betAmount');
-            const slider = document.getElementById('slider');
-            const winChance = document.getElementById('win-chance');
-            const payout = document.getElementById('payout');
-            const winAmount = document.getElementById('win-amount');
-            const winChanceInput = document.getElementById('winChanceInput');
-    
-// Add an event listener to the bet amount input field to update the win amount
-betAmountInput.addEventListener('input', function() {
-    updateWinAmount();
-});
 
-// Add an event listener to the slider to update the win chance, payout, and win amount elements
-slider.addEventListener('input', function() {
-    updateWinAmount();
-});
+       
+// Get the range input field and the win chance, payout, and win amount elements
+const betAmountInput = document.getElementById('betAmount');
+const slider = document.getElementById('slider');
+const winChance = document.getElementById('win-chance');
+const payout = document.getElementById('payout');
+const winAmount = document.getElementById('win-amount');
+const winChanceInput = document.getElementById('winChanceInput');
+    
 function updateWinAmount() {
     // Get the current value of the slider and bet amount input field
     const value = slider.value;
@@ -531,6 +514,14 @@ function updateWinAmount() {
     const winChanceDisplay = document.getElementById('winChanceDisplay');
     winChanceDisplay.value = chance;
 }
+
+// Add an event listener to the bet amount input field to update the win amount
+betAmountInput.addEventListener('change', updateWinAmount);
+
+// Add an event listener to the slider to update the win chance, payout, and win amount elements
+slider.addEventListener('input', updateWinAmount);
+
+
 // Call updateWinAmount() to initialize win amount based on the initial bet amount
 updateWinAmount();
 
@@ -580,59 +571,7 @@ document.getElementById("btnMax").addEventListener("click", function(event) {
 
 
 
-function connectSSE() {
-    const source = new EventSource('{{ route('dice.games.sse') }}');
 
-    // Initialize the last received game ID to 0
-    let lastReceivedGameId = 0;
-
-    source.onmessage = function(event) {
-        const game = JSON.parse(event.data);
-
-        // Check if the game's ID is greater than the last received game's ID
-        if (game.id > lastReceivedGameId) {
-            // Update the last received game ID
-            lastReceivedGameId = game.id;
-
-            const tableBody = document.getElementById('new-games-table').getElementsByTagName('tbody')[0];
-            const rowCount = tableBody.rows.length;
-
-            // Remove the oldest game if there are already 10 games displayed
-            if (rowCount >= 9) {
-                tableBody.deleteRow(rowCount - 1);
-            }
-
-            // Add the new game
-            const row = tableBody.insertRow(0);
-
-            row.insertCell().innerHTML = game.user_name;
-            row.insertCell().innerHTML = game.bet_amount;
-            row.insertCell().innerHTML = game.win_chance + '%';
-            const winAmountCell = row.insertCell();
-winAmountCell.innerHTML = game.win_amount || '';
-if (game.win_amount) {
-    winAmountCell.style.color = 'green';
-}
-        }
-    };
-
-    source.onerror = function(error) {
-        if (source.readyState === EventSource.CLOSED) {
-            console.log("EventSource connection closed");
-            return;
-        } else if (source.readyState === EventSource.CONNECTING) {
-            console.log("EventSource reconnecting...");
-            return;
-        }
-
-        console.error("EventSource failed:", error);
-    };
-}
-
-// Call the connectSSE function with a 1-second delay after the page is loaded
-window.addEventListener('DOMContentLoaded', function() {
-    setTimeout(connectSSE, 1000);
-});
 
 document.addEventListener('DOMContentLoaded', () => {
   showRandomNr()
@@ -653,18 +592,44 @@ muteButton.addEventListener('click', () => {
 });
 });
   </script>
-<script>
-  @if (session('jackpotWin'))
-      swal("Congratulations!", "You won the jackpot!", "success");
-  @endif
 
+@vite('resources/js/bootstrap.js')
+<script type="module">
+
+Echo.channel('DiceRolled').listen('.DiceRolledEvent',(e) => {
+  console.log('[received]', e)
+  const {biggestWins, lastGames, jackpotCoins} = e.message
+  reRenderTables(biggestWins, lastGames, jackpotCoins)
+})
+</script>
+
+<script>
+
+  var maxBet = {{ $max_bet }};
+
+  function reRenderTables(biggestWins, lastGames, jackpotCoins) {
+  
+
+    document.getElementById('lastgames-tbody').innerHTML = lastGames.reduce((total, e) => {
+      let {win_amount} = e
+      let styleWinAmount = ""
+      if(win_amount)
+      styleWinAmount = "color:green"
+      return `${total}<tr><td>${e.user.name}</td><td>${e.bet_amount}</td><td>${e.win_chance}</td><td style=${styleWinAmount}>${win_amount ? win_amount : ''}</td></tr>`
+    }, "")
+
+    document.getElementById('jackpot-value').innerHTML = jackpotCoins
+  }
 
   function updateUI (response) {
-    const { biggestWins, lastGames, balance, randNumValue, result, winAmount } = response
+    const { biggestWins, lastGames, balance, randNumValue, result, winAmount, jackpotCoins, jackpotWin} = response
     showRandomNr(randNumValue)
-    getGames(biggestWins, lastGames)
     updateBalance(balance)
     updateWinAmount(result, winAmount, randNumValue)
+    document.getElementById('betAmount').max = Math.min(balance, maxBet);
+
+    reRenderTables(biggestWins, lastGames, jackpotCoins)
+
     if (result == "win") {
       const muteButton = document.getElementById('mute-button');
       let isMuted = localStorage.getItem('isMuted') === 'true';
@@ -673,7 +638,10 @@ muteButton.addEventListener('click', () => {
         audio.play();
       }
     }
-  }
+    if (jackpotWin) {
+        swal("Congratulations!", "You won the jackpot!", "success");
+    }
+}
 
   $('#dice-play-form').submit(function(event) {
     event.preventDefault();
@@ -694,28 +662,10 @@ muteButton.addEventListener('click', () => {
 
   function updateBalance(balance) {
     document.querySelector('.coin-balance').innerHTML = balance.toFixed(2)
+  
+   
   }
 
-  function getGames(biggestWins, lastGames) {
-    biggestWinsHTML = biggestWins.reduce((trData, tdData, id) => {
-      return "<tr>"  
-      + "<td>" + tdData.user?.name + "</td>"
-      + "<td>$" + tdData.win_amount + "</td>"
-      + "<td>" + tdData.created_at + "</td>"
-      + "</tr>"
-    }, "")
-    document.getElementById('biggestwins-tbody').innerHTML = biggestWinsHTML
-
-    lastgameHTML = lastGames.reduce((trData, tdData, id) => {
-      return trData + "<tr>"  
-      + "<td>" + tdData.user.name + "</td>"
-      + "<td>$" + tdData.bet_amount + "</td>"
-      + "<td>" + tdData.win_chance + "</td>"
-      + "<td style = '" + (tdData.win_amount ? "color:green" : "") + "'>" + (tdData.win_amount || '')  + "</td>"
-      + "</tr>"
-    }, "")
-    document.getElementById('lastgames-tbody').innerHTML = lastgameHTML
-  }
 
   function showRandomNr (value = undefined) {
     var randNumValue = document.getElementById('randNumValue');
@@ -731,15 +681,17 @@ muteButton.addEventListener('click', () => {
     }, 1000); // Change the time (in milliseconds) to adjust how long the value stays on the screen
   }
 
-  function updateWinAmount (result, winAmount, randNumValue) {
+function updateWinAmount (result, winAmount, randNumValue) {
+    if (typeof result === 'undefined' || typeof winAmount === 'undefined' || typeof randNumValue === 'undefined') {
+        return; // Exit the function if any argument is undefined
+    }
     var resultDiv = document.querySelector('.result')
     var resultHTML = ""
     if(result == "win"){
-      resultHTML = "You rolled <span id='winRandNumValue'>" + randNumValue + "</span> and won <span id='winAmount'>" + winAmount + "</span> coins!  \
-                       <audio id='win-sound'> \
-                          <source src=\"{{ asset('icons/win.mp3') }}\" type='audio/mpeg'> \
-                     </audio>"
-      
+        resultHTML = "You rolled <span id='winRandNumValue'>" + randNumValue + "</span> and won <span id='winAmount'>" + winAmount.toFixed(2) + "</span> coins!  \
+                   <audio id='win-sound'> \
+                      <source src=\"{{ asset('icons/win.mp3') }}\" type='audio/mpeg'> \
+                 </audio>"
     }
     else resultHTML = "You rolled <span id='winRandNumValue'>" + (randNumValue || '') + "</span> and lost."
 

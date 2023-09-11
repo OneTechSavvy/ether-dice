@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('dice:biggestwins')->hourly();
         $schedule->command('fetch:successful-transactions')
         ->everyFiveMinutes();
+        $schedule->command('freeze:betslips')->everyMinute();
 
         $schedule->command('fetch:successful-bsc-transactions')
         ->everyFiveMinutes();

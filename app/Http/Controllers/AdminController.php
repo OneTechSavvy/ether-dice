@@ -6,32 +6,41 @@ use App\Models\Withdrawal;
 use App\Models\User; // Import the User model
 use App\Models\DiceGame; 
 use App\Models\House; 
+use App\Models\Betslip; 
+use App\Models\PrBet; 
 use App\Models\CoinflipGame; 
 use App\Models\JackpotGame; 
 use Illuminate\Http\Request;
 use App\Models\Transaction;
+use App\Http\Requests\CreateBetslipRequest;
+
 
 
 class AdminController extends Controller
 {
     public function index()
-{
+    {
+        $approvedWithdrawals = Withdrawal::where('status', 'approved')->sum('coins'); // Sum of all approved withdrawals
+    
+        $totalUserCoins = User::sum('coins'); // Get the sum of all coins in User table
+        $totalTransactionCoinValue = Transaction::sum('coin_value'); // Get the sum of all coin_value in Transaction table
+        $totalDeposits = Transaction::sum('coin_value'); // Get the sum of all coin values in Transaction table
 
-    $withdrawals = Withdrawal::where('status', '<>', 'approved')->get();
 
-    $totalUserCoins = User::sum('coins'); // Get the sum of all coins in User table
-    $totalTransactionCoinValue = Transaction::sum('coin_value'); // Get the sum of all coin_value in Transaction table
-    $siteProfit = $totalTransactionCoinValue - $totalUserCoins;
+        $siteProfit = $totalTransactionCoinValue - $totalUserCoins - $approvedWithdrawals;
+    
+        $withdrawals = Withdrawal::whereIn('status', ['pending', 'rejected'])->get();
 
-
-    $total_users = User::count(); // Get the count of all users
-    $diceGamesCount = DiceGame::count();
-    $coinflipGamesCount = CoinflipGame::count();
-    $jackpotGamesCount = JackpotGame::count();
-    $totalGames = $diceGamesCount + $coinflipGamesCount + $jackpotGamesCount;
-    return view('admin.index', compact('withdrawals', 'total_users', 'totalGames', 'siteProfit'));
-
-}
+    
+        $total_users = User::count(); // Get the count of all users
+        $diceGamesCount = DiceGame::count();
+        $coinflipGamesCount = CoinflipGame::count();
+        $jackpotGamesCount = JackpotGame::count();
+        $totalGames = $diceGamesCount + $coinflipGamesCount + $jackpotGamesCount;
+    
+        return view('admin.index', compact('totalDeposits','withdrawals', 'total_users', 'totalGames', 'siteProfit'));
+    }
+    
 public function approveWithdrawal($id)
 {
     $withdrawal = Withdrawal::findOrFail($id);
@@ -94,4 +103,58 @@ public function admindice()
     return view('admin.admindice', compact('withdrawals', 'total_users', 'totalGames', 'siteProfit', 'maxBet'));
 
 }
+public function adminusers(Request $request)
+{
+    $users = User::all();
+
+    $id = $request->query('id');
+    
+    if ($id) {
+        $user = User::find($id);
+        $userTotalGames = $user->diceGames->count();
+        $userDeposit = $user->transactions->sum('coin_value');
+        $userProfitLoss = $user->coins - $userDeposit;
+    } else {
+        $user = null;
+        $userTotalGames = null;
+        $userProfitLoss = null;
+        $userDeposit = null;
+    }
+
+    return view('admin.adminusers', compact('users', 'user', 'userTotalGames', 'userProfitLoss', 'userDeposit'));
 }
+public function betslip()
+{
+    $betslips = Betslip::whereIn('status', ['open', 'frozen'])->get();
+
+
+    $approvedWithdrawals = Withdrawal::where('status', 'approved')->sum('coins'); // Sum of all approved withdrawals
+    
+    $totalUserCoins = User::sum('coins'); // Get the sum of all coins in User table
+    $totalTransactionCoinValue = Transaction::sum('coin_value'); // Get the sum of all coin_value in Transaction table
+    $totalDeposits = Transaction::sum('coin_value'); // Get the sum of all coin values in Transaction table
+
+
+    $siteProfit = $totalTransactionCoinValue - $totalUserCoins - $approvedWithdrawals;
+
+  
+
+    $total_users = User::count(); // Get the count of all users
+    $diceGamesCount = DiceGame::count();
+    $coinflipGamesCount = CoinflipGame::count();
+    $jackpotGamesCount = JackpotGame::count();
+    $totalGames = $diceGamesCount + $coinflipGamesCount + $jackpotGamesCount;
+
+    
+
+
+
+    return view('admin.betslip', compact('totalDeposits', 'total_users', 'totalGames', 'siteProfit', 'betslips'));
+}
+
+
+
+}
+
+
+

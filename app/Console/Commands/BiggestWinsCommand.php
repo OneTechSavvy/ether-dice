@@ -20,8 +20,7 @@ class BiggestWinsCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Fetch the biggest wins in the last 24 hours';
-
+    protected $description = 'Fetch the biggest wins of all time';
 
     /**
      * Execute the console command.
@@ -29,9 +28,8 @@ class BiggestWinsCommand extends Command
     public function handle(): void
     {
         $biggestWins = DiceGame::where('result', 'win')
-        ->where('created_at', '>=', now()->subDay())
         ->orderBy('win_amount', 'desc')
-        ->take(5)
+        ->take(6)
         ->get();
 
     // Store the biggest wins in cache for 1 hour
